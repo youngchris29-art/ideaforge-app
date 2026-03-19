@@ -231,7 +231,7 @@ function GrantProSection({ allUsers }: { allUsers: any[] | undefined }) {
                     </button>
                   )}
                 </div>
-                {status?.id === u.clerkId && (
+                {status?.id === u.clerkId && status && (
                   <p className={`text-xs ${status.ok ? "text-green-400" : "text-red-400"}`}>
                     {status.msg}
                   </p>
