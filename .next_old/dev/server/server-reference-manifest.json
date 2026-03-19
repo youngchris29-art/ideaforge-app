@@ -1,0 +1,30 @@
+{
+  "node": {
+    "00add695f9b1ceb50cd3784c60336710ff6454c5df": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/node_modules/@clerk/nextjs/dist/esm/app-router/server-actions.js [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false,
+          "exportedName": "invalidateCacheAction",
+          "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/server-actions.js"
+        }
+      },
+      "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/server-actions.js",
+      "exportedName": "invalidateCacheAction"
+    },
+    "0085168edb3d8188b241ab50bf7b821c4b7c61fcfd": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/node_modules/@clerk/nextjs/dist/esm/app-router/server-actions.js [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false,
+          "exportedName": "createOrReadKeylessAction",
+          "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
+        }
+      },
+      "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js",
+      "exportedName": "createOrReadKeylessAction"
+    }
+  },
+  "edge": {},
+  "encryptionKey": "t+1+ZKtN4Hse/cH98w6eBz2s0bETd1w2qSRHDdg3KoE="
+}

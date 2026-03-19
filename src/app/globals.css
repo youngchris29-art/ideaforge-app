@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+/* ==========================================
+   IdeaForge Design Tokens
+   Warm & Creative — Dark Mode First
+   ========================================== */
+
+@theme {
+  /* Primary Colors */
+  --color-primary: #D4A574;
+  --color-primary-hover: #C4925F;
+  --color-primary-light: #E8C9A0;
+
+  /* Secondary Colors */
+  --color-secondary: #5B3A8D;
+  --color-secondary-hover: #4A2F73;
+  --color-secondary-light: #7B5AAD;
+
+  /* Accent Colors */
+  --color-accent: #F4D35E;
+  --color-accent-hover: #E5C44F;
+  --color-accent-muted: #F4D35E33;
+
+  /* Backgrounds (Dark Mode Default) */
+  --color-bg: #0F0F0F;
+  --color-bg-surface: #1A1A1A;
+  --color-bg-elevated: #242424;
+  --color-bg-hover: #2A2A2A;
+
+  /* Text */
+  --color-text: #F5F0EB;
+  --color-text-secondary: #A89F97;
+  --color-text-muted: #6B6560;
+  --color-text-inverse: #0F0F0F;
+
+  /* Borders */
+  --color-border: #333333;
+  --color-border-hover: #4A4A4A;
+  --color-border-focus: #D4A574;
+
+  /* Semantic Colors */
+  --color-success: #4ADE80;
+  --color-success-bg: #4ADE8015;
+  --color-warning: #FBBF24;
+  --color-warning-bg: #FBBF2415;
+  --color-error: #F87171;
+  --color-error-bg: #F8717115;
+  --color-info: #60A5FA;
+  --color-info-bg: #60A5FA15;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(212, 165, 116, 0.15);
+
+  /* Typography */
+  --font-heading: "Poppins", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "Fira Code", ui-monospace, monospace;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+}
+
+/* Base Styles */
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Focus Styles */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-hover);
+}
+
+/* Page transition animations (TASK-073) */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+main,
+section {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Smooth hover transitions for interactive elements */
+a,
+button {
+  transition: all 0.2s ease;
+}
+
+/* Card hover lift effect */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Safe area padding for mobile (iPhone notch) */
+.safe-area-bottom {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+/* Focus visible for keyboard navigation */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Better mobile tap targets */
+@media (max-width: 640px) {
+  button,
+  a {
+    min-height: 44px;
+  }
+}

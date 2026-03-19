@@ -1,0 +1,6 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0F0F0F"/>
+  <text x="600" y="250" font-family="system-ui, sans-serif" font-size="72" font-weight="bold" fill="#D4A574" text-anchor="middle">IdeaForge</text>
+  <text x="600" y="340" font-family="system-ui, sans-serif" font-size="32" fill="#F5F0EB" text-anchor="middle">From idea to launch plan in one conversation</text>
+  <text x="600" y="420" font-family="system-ui, sans-serif" font-size="24" fill="#A89F97" text-anchor="middle">AI-powered business advisor for first-time founders</text>
+</svg>

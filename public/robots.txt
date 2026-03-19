@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /auth/
+Disallow: /checkout
+Disallow: /account
+Disallow: /onboarding
+
+Sitemap: https://ideaforge.app/sitemap.xml
