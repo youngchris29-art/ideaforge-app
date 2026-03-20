@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import ConvexClientProvider from "@/components/ConvexClientProvider";
 import "./globals.css";
 
@@ -74,6 +75,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-surface text-on-surface antialiased">
         <ConvexClientProvider>{children}</ConvexClientProvider>
+        <Analytics />
       </body>
     </html>
   );
