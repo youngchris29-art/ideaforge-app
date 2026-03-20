@@ -21,6 +21,177 @@ const DOC_TYPE_ORDER = [
   "elevator_pitch",
 ] as const;
 
+async function downloadAsPDF(title: string, content: string) {
+  const { jsPDF } = await import("jspdf");
+  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 20;
+  const maxWidth = pageWidth - 2 * margin;
+  let y = margin;
+
+  const newPage = () => { doc.addPage(); y = margin; };
+  const ensureSpace = (h: number) => { if (y + h > pageHeight - margin) newPage(); };
+
+  // Title header
+  doc.setFontSize(22);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(40, 40, 40);
+  const titleLines = doc.splitTextToSize(title, maxWidth);
+  doc.text(titleLines, margin, y);
+  y += titleLines.length * 10 + 2;
+
+  doc.setDrawColor(180, 160, 100);
+  doc.setLineWidth(0.5);
+  doc.line(margin, y, pageWidth - margin, y);
+  y += 8;
+
+  const lines = content.split("\n");
+
+  for (const line of lines) {
+    if (line.trim() === "") { y += 2; continue; }
+
+    if (/^---+$/.test(line.trim())) {
+      ensureSpace(6);
+      doc.setDrawColor(200, 200, 200);
+      doc.setLineWidth(0.3);
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 5;
+      continue;
+    }
+
+    const h1 = line.match(/^# (.+)/);
+    if (h1) {
+      ensureSpace(12);
+      doc.setFontSize(16);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(40, 40, 40);
+      const w = doc.splitTextToSize(h1[1], maxWidth);
+      doc.text(w, margin, y);
+      y += w.length * 8 + 3;
+      continue;
+    }
+
+    const h2 = line.match(/^## (.+)/);
+    if (h2) {
+      ensureSpace(10);
+      doc.setFontSize(13);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(60, 60, 60);
+      const w = doc.splitTextToSize(h2[1], maxWidth);
+      doc.text(w, margin, y);
+      y += w.length * 7 + 2;
+      continue;
+    }
+
+    const h3 = line.match(/^### (.+)/);
+    if (h3) {
+      ensureSpace(8);
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bolditalic");
+      doc.setTextColor(80, 80, 80);
+      const w = doc.splitTextToSize(h3[1], maxWidth);
+      doc.text(w, margin, y);
+      y += w.length * 6 + 2;
+      continue;
+    }
+
+    const h4 = line.match(/^#### (.+)/);
+    if (h4) {
+      ensureSpace(7);
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(90, 90, 90);
+      const w = doc.splitTextToSize(h4[1], maxWidth);
+      doc.text(w, margin, y);
+      y += w.length * 5.5 + 1;
+      continue;
+    }
+
+    // Table row
+    if (line.includes("|")) {
+      const cells = line.split("|").map(c => c.trim()).filter(Boolean);
+      if (/^[-| :]+$/.test(line.trim())) { y += 1; continue; } // separator
+      ensureSpace(6);
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(60, 60, 60);
+      const colWidth = maxWidth / Math.max(cells.length, 1);
+      cells.forEach((cell, i) => {
+        const plain = cell.replace(/\*\*(.+?)\*\*/g, "$1").replace(/\*(.+?)\*/g, "$1").replace(/`(.+?)`/g, "$1");
+        const w = doc.splitTextToSize(plain, colWidth - 2);
+        doc.text(w, margin + i * colWidth, y);
+      });
+      y += 5.5;
+      continue;
+    }
+
+    // Blockquote
+    if (line.trim().startsWith("> ")) {
+      ensureSpace(6);
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "italic");
+      doc.setTextColor(100, 100, 100);
+      const text = line.trim().slice(2);
+      const w = doc.splitTextToSize(text, maxWidth - 8);
+      doc.text(w, margin + 4, y);
+      y += w.length * 5 + 2;
+      continue;
+    }
+
+    // Bullet list
+    if (/^[-*] /.test(line.trim())) {
+      ensureSpace(6);
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(50, 50, 50);
+      const plain = line.trim().slice(2).replace(/\*\*(.+?)\*\*/g, "$1").replace(/\*(.+?)\*/g, "$1").replace(/`(.+?)`/g, "$1");
+      const w = doc.splitTextToSize("• " + plain, maxWidth - 6);
+      doc.text(w, margin + 4, y);
+      y += w.length * 5 + 1;
+      continue;
+    }
+
+    // Numbered list
+    const numMatch = line.trim().match(/^(\d+)\. (.+)/);
+    if (numMatch) {
+      ensureSpace(6);
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(50, 50, 50);
+      const plain = numMatch[2].replace(/\*\*(.+?)\*\*/g, "$1").replace(/\*(.+?)\*/g, "$1").replace(/`(.+?)`/g, "$1");
+      const w = doc.splitTextToSize(`${numMatch[1]}. ${plain}`, maxWidth - 6);
+      doc.text(w, margin + 4, y);
+      y += w.length * 5 + 1;
+      continue;
+    }
+
+    // Paragraph
+    ensureSpace(6);
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(50, 50, 50);
+    const plain = line.replace(/\*\*(.+?)\*\*/g, "$1").replace(/\*(.+?)\*/g, "$1").replace(/`(.+?)`/g, "$1");
+    const w = doc.splitTextToSize(plain, maxWidth);
+    doc.text(w, margin, y);
+    y += w.length * 5 + 2;
+  }
+
+  // Footer on each page
+  const totalPages = doc.getNumberOfPages();
+  for (let p = 1; p <= totalPages; p++) {
+    doc.setPage(p);
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(160, 160, 160);
+    doc.text("Generated by IdeaForge", margin, pageHeight - 8);
+    doc.text(`${p} / ${totalPages}`, pageWidth - margin, pageHeight - 8, { align: "right" });
+  }
+
+  doc.save(`${title.replace(/\s+/g, "_")}.pdf`);
+}
+
 function CopyButton({ content }: { content: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -437,18 +608,10 @@ export default function DocumentViewer({
                 <CopyButton content={selectedDoc.content} />
                 {isPaid ? (
                   <button
-                    onClick={() => {
-                      const blob = new Blob([selectedDoc.content], { type: "text/markdown" });
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement("a");
-                      a.href = url;
-                      a.download = `${selectedDoc.title.replace(/\s+/g, "_")}.md`;
-                      a.click();
-                      URL.revokeObjectURL(url);
-                    }}
+                    onClick={() => downloadAsPDF(selectedDoc.title, selectedDoc.content)}
                     className="px-3 py-1.5 text-xs font-medium rounded-md border border-hairline text-on-surface-variant hover:text-on-surface hover:bg-surface-bright transition-colors"
                   >
-                    Download
+                    Download PDF
                   </button>
                 ) : (
                   <button
