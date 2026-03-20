@@ -98,8 +98,8 @@ export default function SessionPage({
   return (
     <div className="flex flex-col" style={{ height: "calc(100svh - 64px)" }}>
       {/* Session goal + progress sub-header */}
-      <div className="w-full bg-surface-container-low px-4 pt-5 pb-4 md:px-8 md:pt-10 md:pb-6 border-b border-outline-variant/10">
-        <div className="max-w-4xl mx-auto space-y-3 md:space-y-6">
+      <div className="w-full bg-surface-container-low px-4 pt-4 pb-3 md:px-8 md:pt-6 md:pb-4 border-b border-outline-variant/10">
+        <div className="max-w-4xl mx-auto space-y-3">
           {/* Top row: back + view toggle */}
           <div className="flex items-center justify-between">
             <Link
@@ -133,16 +133,6 @@ export default function SessionPage({
                 ))}
               </div>
             )}
-          </div>
-
-          {/* Goal display */}
-          <div className="space-y-1.5">
-            <span className="text-[10px] uppercase tracking-[0.2em] text-primary/60 font-body font-medium">
-              Active Session Goal
-            </span>
-            <h1 className="text-lg md:text-3xl serif-display italic leading-snug text-on-background line-clamp-2 md:line-clamp-none">
-              &ldquo;{session.ideaTitle}&rdquo;
-            </h1>
           </div>
 
           {/* Progress bar */}

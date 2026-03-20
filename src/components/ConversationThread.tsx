@@ -158,11 +158,9 @@ export default function ConversationThread({
       {!isCompleted && (
         <div className="sticky bottom-0 w-full bg-gradient-to-t from-background via-background/95 to-transparent pt-6 pb-4 px-4 md:pt-12 md:pb-8 md:px-6">
           <div className="max-w-4xl mx-auto">
-            <form onSubmit={handleSubmit} className="relative group">
-              {/* Glow effect */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-primary-container/20 rounded-xl blur opacity-25 group-focus-within:opacity-50 transition duration-500 pointer-events-none" />
+            <form onSubmit={handleSubmit} className="relative">
               {/* Input container */}
-              <div className="relative flex items-center bg-surface-container-low border border-outline-variant/20 rounded-xl p-2 pl-6 focus-within:border-primary/50 transition-all">
+              <div className="relative flex items-center bg-surface-container-high border border-outline-variant/40 rounded-xl p-2 pl-6 focus-within:border-primary/70 focus-within:ring-1 focus-within:ring-primary/30 transition-all">
                 <textarea
                   ref={textareaRef}
                   value={input}
