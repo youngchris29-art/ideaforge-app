@@ -106,6 +106,37 @@ export const decrementSessions = mutation({
   },
 });
 
+export const updateProfile = mutation({
+  args: {
+    clerkId: v.string(),
+    name: v.string(),
+    phone: v.optional(v.string()),
+    addressLine1: v.optional(v.string()),
+    city: v.optional(v.string()),
+    country: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
+      .unique();
+
+    if (!existing) throw new Error("User not found");
+
+    await ctx.db.patch(existing._id, {
+      name: args.name,
+      phone: args.phone,
+      addressLine1: args.addressLine1,
+      city: args.city,
+      country: args.country,
+      profileCompleted: true,
+      updatedAt: Date.now(),
+    });
+
+    return existing._id;
+  },
+});
+
 // Reset a user back to the free tier (for testing)
 export const resetToFree = mutation({
   args: { clerkId: v.string() },
