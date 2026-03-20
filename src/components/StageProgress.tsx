@@ -9,8 +9,8 @@ interface StageProgressProps {
 
 export default function StageProgress({ currentStage, isCompleted }: StageProgressProps) {
   return (
-    <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-border bg-bg-surface/50">
-      {/* Stage indicators */}
+    <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-hairline bg-surface-container-low">
+      {/* Stage indicators — 2px hairline bars */}
       <div className="flex items-center gap-1 mb-1.5 sm:mb-2">
         {STAGES.map((stage) => {
           const isActive = stage.id === currentStage && !isCompleted;
@@ -19,12 +19,12 @@ export default function StageProgress({ currentStage, isCompleted }: StageProgre
           return (
             <div key={stage.id} className="flex-1 flex flex-col items-center gap-1">
               <div
-                className={`h-1.5 w-full rounded-full transition-all ${
+                className={`h-0.5 w-full transition-all ${
                   isDone
                     ? "bg-primary"
                     : isActive
                       ? "bg-primary/50"
-                      : "bg-border"
+                      : "bg-surface-bright"
                 }`}
               />
             </div>
@@ -34,7 +34,7 @@ export default function StageProgress({ currentStage, isCompleted }: StageProgre
 
       {/* Current stage label */}
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-text-secondary">
+        <span className="tag-intelligence text-on-surface-variant">
           {isCompleted ? (
             <span className="text-primary">Session Complete</span>
           ) : (
@@ -42,14 +42,14 @@ export default function StageProgress({ currentStage, isCompleted }: StageProgre
               Stage {currentStage}/5
               <span className="hidden sm:inline">
                 :{" "}
-                <span className="text-text">
+                <span className="text-on-surface">
                   {STAGES.find((s) => s.id === currentStage)?.name}
                 </span>
               </span>
             </>
           )}
         </span>
-        <span className="text-xs text-text-muted">
+        <span className="tag-intelligence text-on-surface-variant">
           {isCompleted
             ? "100%"
             : `${Math.round(((currentStage - 1) / 5) * 100)}%`}

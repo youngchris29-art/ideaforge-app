@@ -15,13 +15,13 @@ export default function SocialShare({ ideaTitle }: SocialShareProps) {
 
   return (
     <div className="flex flex-col items-center gap-3">
-      <p className="text-sm text-text-muted">Share your journey</p>
+      <p className="text-sm text-on-surface-variant">Share your journey</p>
       <div className="flex items-center gap-3">
         <a
           href={`https://twitter.com/intent/tweet?text=${tweetText}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm text-text-secondary hover:text-text hover:bg-bg-hover transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 border border-hairline rounded-md text-sm text-on-surface-variant hover:text-text hover:bg-surface-bright transition-colors"
           aria-label="Share on X (Twitter)"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -33,7 +33,7 @@ export default function SocialShare({ ideaTitle }: SocialShareProps) {
           href={`https://www.linkedin.com/sharing/share-offsite/?url=https://ideaforge.app&summary=${linkedInText}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm text-text-secondary hover:text-text hover:bg-bg-hover transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 border border-hairline rounded-md text-sm text-on-surface-variant hover:text-text hover:bg-surface-bright transition-colors"
           aria-label="Share on LinkedIn"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">

@@ -59,16 +59,16 @@ export default function CheckoutPage() {
 
   if (!isSignedIn) {
     return (
-      <div className="min-h-screen bg-bg">
+      <div className="min-h-screen bg-surface">
         <Header />
         <div className="max-w-md mx-auto px-6 py-20 text-center space-y-4">
-          <h1 className="text-2xl font-heading font-bold">Sign in to upgrade</h1>
-          <p className="text-text-secondary text-sm">
+          <h1 className="text-2xl font-display font-bold">Sign in to upgrade</h1>
+          <p className="text-on-surface-variant text-sm">
             You need to be signed in to upgrade to Pro.
           </p>
           <Link
             href="/auth/sign-in"
-            className="inline-block px-6 py-2.5 bg-primary text-text-inverse font-medium rounded-lg hover:bg-primary-hover transition-colors text-sm"
+            className="inline-block px-6 py-2.5 bg-primary text-surface font-medium rounded-md hover:bg-primary-hover transition-colors text-sm"
           >
             Sign In
           </Link>
@@ -78,26 +78,26 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-surface">
       <Header />
       <div className="max-w-md mx-auto px-6 py-20 text-center space-y-6">
         {error ? (
           <>
             <div className="text-4xl">😕</div>
-            <h1 className="text-2xl font-heading font-bold">
+            <h1 className="text-2xl font-display font-bold">
               Checkout Error
             </h1>
-            <p className="text-text-secondary text-sm">{error}</p>
+            <p className="text-on-surface-variant text-sm">{error}</p>
             <div className="flex items-center justify-center gap-3">
               <button
                 onClick={() => window.location.reload()}
-                className="px-6 py-2.5 bg-primary text-text-inverse font-medium rounded-lg hover:bg-primary-hover transition-colors text-sm"
+                className="px-6 py-2.5 bg-primary text-surface font-medium rounded-md hover:bg-primary-hover transition-colors text-sm"
               >
                 Try Again
               </button>
               <Link
                 href="/pricing"
-                className="px-6 py-2.5 border border-border text-text font-medium rounded-lg hover:bg-bg-hover transition-colors text-sm"
+                className="px-6 py-2.5 border border-hairline text-on-surface font-medium rounded-md hover:bg-surface-bright transition-colors text-sm"
               >
                 Back to Pricing
               </Link>
@@ -106,10 +106,10 @@ export default function CheckoutPage() {
         ) : (
           <>
             <div className="w-10 h-10 border-2 border-primary/30 border-t-primary rounded-full animate-spin mx-auto" />
-            <h1 className="text-2xl font-heading font-bold">
+            <h1 className="text-2xl font-display font-bold">
               Preparing checkout...
             </h1>
-            <p className="text-text-secondary text-sm">
+            <p className="text-on-surface-variant text-sm">
               Redirecting you to our secure payment partner.
             </p>
           </>

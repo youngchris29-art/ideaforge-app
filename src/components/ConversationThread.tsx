@@ -71,7 +71,7 @@ export default function ConversationThread({
   return (
     <div className="flex flex-col h-full">
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto hide-scrollbar px-6 py-12 space-y-10">
+      <div className="flex-1 overflow-y-auto hide-scrollbar px-4 py-6 md:px-6 md:py-12 space-y-6 md:space-y-10">
         {messages.map((message) => (
           <div
             key={message._id}
@@ -156,7 +156,7 @@ export default function ConversationThread({
 
       {/* Input area */}
       {!isCompleted && (
-        <div className="sticky bottom-0 w-full bg-gradient-to-t from-background via-background/95 to-transparent pt-12 pb-8 px-6">
+        <div className="sticky bottom-0 w-full bg-gradient-to-t from-background via-background/95 to-transparent pt-6 pb-4 px-4 md:pt-12 md:pb-8 md:px-6">
           <div className="max-w-4xl mx-auto">
             <form onSubmit={handleSubmit} className="relative group">
               {/* Glow effect */}

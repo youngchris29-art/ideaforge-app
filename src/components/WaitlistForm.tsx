@@ -26,7 +26,7 @@ export default function WaitlistForm() {
 
   if (status === "success") {
     return (
-      <div className="inline-flex items-center gap-2 px-6 py-3 bg-success/10 border border-success/20 rounded-xl text-success text-sm font-medium">
+      <div className="inline-flex items-center gap-2 px-6 py-3 bg-success/8 border border-hairline rounded-md text-success text-sm font-medium">
         <span>✓</span> You&apos;re on the list! We&apos;ll be in touch.
       </div>
     );
@@ -40,12 +40,12 @@ export default function WaitlistForm() {
         onChange={(e) => setEmail(e.target.value)}
         placeholder="your@email.com"
         required
-        className="w-full sm:flex-1 px-4 py-3 bg-bg-elevated border border-border rounded-xl text-text text-sm placeholder:text-text-muted focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+        className="w-full sm:flex-1 px-4 py-3 bg-surface-container-low border border-hairline rounded-md text-on-surface text-sm placeholder:text-on-surface-variant focus:border-primary focus:ring-0 outline-none transition-colors"
       />
       <button
         type="submit"
         disabled={status === "loading"}
-        className="w-full sm:w-auto px-6 py-3 bg-secondary text-white font-medium rounded-xl hover:bg-secondary-hover transition-colors text-sm disabled:opacity-50 whitespace-nowrap"
+        className="btn-primary w-full sm:w-auto px-6 py-3 text-sm disabled:opacity-50 whitespace-nowrap"
       >
         {status === "loading" ? "Joining..." : "Get Early Access"}
       </button>

@@ -14,26 +14,26 @@ export default function ErrorPage({
   }, [error]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-bg px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-surface px-4">
       <div className="text-center max-w-md">
         <div className="text-6xl mb-4">⚡</div>
-        <h1 className="text-2xl font-heading font-bold mb-2">
+        <h1 className="text-2xl font-display font-bold mb-2">
           Something went wrong
         </h1>
-        <p className="text-text-secondary mb-6">
+        <p className="text-on-surface-variant mb-6">
           We hit a snag. Don&apos;t worry — your data is safe. Try again or head
           back to the dashboard.
         </p>
         <div className="flex items-center justify-center gap-3">
           <button
             onClick={reset}
-            className="px-6 py-2.5 bg-primary text-text-inverse font-medium rounded-lg hover:bg-primary-hover transition-colors"
+            className="px-6 py-2.5 bg-primary text-surface font-medium rounded-md hover:bg-primary-hover transition-colors"
           >
             Try Again
           </button>
           <a
             href="/dashboard"
-            className="px-6 py-2.5 border border-border text-text rounded-lg hover:bg-bg-hover transition-colors"
+            className="px-6 py-2.5 border border-hairline text-on-surface rounded-md hover:bg-surface-bright transition-colors"
           >
             Dashboard
           </a>

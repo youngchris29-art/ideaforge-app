@@ -17,7 +17,7 @@ function CheckIcon() {
 
 function LockIcon() {
   return (
-    <svg className="w-4 h-4 text-text-muted shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+    <svg className="w-4 h-4 text-on-surface-variant shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
       <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
     </svg>
   );
@@ -33,15 +33,15 @@ export default function PricingPage() {
   const isPaid = convexUser?.subscriptionStatus === "paid";
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-surface">
       <Header />
       <div className="max-w-4xl mx-auto px-6 py-16">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-heading font-bold mb-3">
+          <h1 className="text-4xl font-display font-light mb-3">
             Simple, founder-friendly pricing
           </h1>
-          <p className="text-text-secondary text-lg max-w-xl mx-auto">
+          <p className="text-on-surface-variant text-lg max-w-xl mx-auto">
             Start free. Upgrade when you&apos;re ready to forge unlimited ideas into launch plans.
           </p>
         </div>
@@ -49,13 +49,13 @@ export default function PricingPage() {
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
           {/* Free Tier */}
-          <div className="p-8 rounded-2xl border border-border bg-bg-surface space-y-6">
+          <div className="p-8 rounded-md border border-hairline bg-transparent space-y-6">
             <div>
-              <h2 className="font-heading font-bold text-xl">{PRICING.free.name}</h2>
+              <h2 className="font-display font-normal text-xl">{PRICING.free.name}</h2>
               <div className="mt-2 flex items-baseline gap-1">
-                <span className="text-4xl font-heading font-bold">{PRICING.free.priceLabel}</span>
+                <span className="text-4xl font-display font-light">{PRICING.free.priceLabel}</span>
               </div>
-              <p className="text-text-secondary text-sm mt-2">
+              <p className="text-on-surface-variant text-sm mt-2">
                 Perfect for testing your first idea
               </p>
             </div>
@@ -64,13 +64,13 @@ export default function PricingPage() {
               {PRICING.free.features.map((feature) => (
                 <div key={feature} className="flex items-start gap-2.5">
                   <CheckIcon />
-                  <span className="text-sm text-text">{feature}</span>
+                  <span className="text-sm text-on-surface">{feature}</span>
                 </div>
               ))}
               {PRICING.free.limitations.map((limitation) => (
                 <div key={limitation} className="flex items-start gap-2.5">
                   <LockIcon />
-                  <span className="text-sm text-text-muted">{limitation}</span>
+                  <span className="text-sm text-on-surface-variant">{limitation}</span>
                 </div>
               ))}
             </div>
@@ -78,14 +78,14 @@ export default function PricingPage() {
             {isSignedIn ? (
               <Link
                 href="/dashboard"
-                className="block w-full py-3 text-center rounded-lg border border-border text-text font-medium hover:bg-bg-hover transition-colors text-sm"
+                className="block w-full py-3 text-center rounded-md border border-hairline text-on-surface font-medium hover:bg-surface-bright transition-colors text-sm"
               >
                 {isPaid ? "Current: Starter" : "Go to Dashboard"}
               </Link>
             ) : (
               <Link
                 href="/auth/sign-up"
-                className="block w-full py-3 text-center rounded-lg border border-border text-text font-medium hover:bg-bg-hover transition-colors text-sm"
+                className="block w-full py-3 text-center rounded-md border border-hairline text-on-surface font-medium hover:bg-surface-bright transition-colors text-sm"
               >
                 Get Started Free
               </Link>
@@ -93,21 +93,21 @@ export default function PricingPage() {
           </div>
 
           {/* Pro Tier */}
-          <div className="p-8 rounded-2xl border-2 border-primary bg-bg-surface space-y-6 relative">
+          <div className="p-8 rounded-md border border-primary/30 bg-surface-container-low space-y-6 relative">
             {/* Badge */}
             <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-              <span className="px-4 py-1 bg-primary text-text-inverse text-xs font-bold uppercase rounded-full tracking-wider">
+              <span className="tag-intelligence px-4 py-1.5 bg-primary text-surface rounded-full">
                 Most Popular
               </span>
             </div>
 
             <div>
-              <h2 className="font-heading font-bold text-xl">{PRICING.pro.name}</h2>
+              <h2 className="font-display font-normal text-xl">{PRICING.pro.name}</h2>
               <div className="mt-2 flex items-baseline gap-1">
-                <span className="text-4xl font-heading font-bold text-primary">$15</span>
-                <span className="text-text-secondary text-sm">/month</span>
+                <span className="text-4xl font-display font-light text-primary">$15</span>
+                <span className="text-on-surface-variant text-sm">/month</span>
               </div>
-              <p className="text-text-secondary text-sm mt-2">
+              <p className="text-on-surface-variant text-sm mt-2">
                 For founders who are serious about execution
               </p>
             </div>
@@ -116,26 +116,26 @@ export default function PricingPage() {
               {PRICING.pro.features.map((feature) => (
                 <div key={feature} className="flex items-start gap-2.5">
                   <CheckIcon />
-                  <span className="text-sm text-text">{feature}</span>
+                  <span className="text-sm text-on-surface">{feature}</span>
                 </div>
               ))}
             </div>
 
             {isPaid ? (
-              <div className="w-full py-3 text-center rounded-lg bg-success/10 border border-success/20 text-success font-medium text-sm">
+              <div className="w-full py-3 text-center rounded-md bg-success/10 border border-success/20 text-success font-medium text-sm">
                 Your Current Plan
               </div>
             ) : isSignedIn ? (
               <Link
                 href="/checkout"
-                className="block w-full py-3 text-center rounded-lg bg-primary text-text-inverse font-medium hover:bg-primary-hover transition-colors text-sm"
+                className="btn-primary block w-full py-3 text-center text-sm"
               >
                 Upgrade to Pro
               </Link>
             ) : (
               <Link
                 href="/auth/sign-up"
-                className="block w-full py-3 text-center rounded-lg bg-primary text-text-inverse font-medium hover:bg-primary-hover transition-colors text-sm"
+                className="btn-primary block w-full py-3 text-center text-sm"
               >
                 Start Free, Upgrade Anytime
               </Link>
@@ -145,7 +145,7 @@ export default function PricingPage() {
 
         {/* FAQ */}
         <div className="mt-16 max-w-2xl mx-auto space-y-6">
-          <h2 className="text-2xl font-heading font-bold text-center mb-8">
+          <h2 className="text-2xl font-display font-normal text-center mb-8">
             Questions? We got you.
           </h2>
 
@@ -175,9 +175,9 @@ export default function PricingPage() {
 
 function FaqItem({ question, answer }: { question: string; answer: string }) {
   return (
-    <div className="p-5 rounded-xl border border-border bg-bg-surface">
-      <h3 className="font-heading font-semibold text-sm mb-2">{question}</h3>
-      <p className="text-text-secondary text-sm leading-relaxed">{answer}</p>
+    <div className="p-5 rounded-md border border-hairline bg-surface-container-low">
+      <h3 className="font-body font-medium text-sm mb-2">{question}</h3>
+      <p className="text-on-surface-variant text-sm leading-relaxed">{answer}</p>
     </div>
   );
 }

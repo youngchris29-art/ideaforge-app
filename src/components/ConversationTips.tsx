@@ -56,8 +56,8 @@ export default function ConversationTips({
   if (!stageTips) return null;
 
   return (
-    <div className="px-3 sm:px-4 py-2.5 border-t border-border/50 bg-bg-surface/30">
-      <p className="text-xs text-text-muted mb-2">
+    <div className="px-3 sm:px-4 py-2.5 border-t border-hairline bg-surface-container-low">
+      <p className="text-xs text-on-surface-variant mb-2">
         💡 {stageTips.tip}
       </p>
       <div className="flex flex-wrap gap-1.5">
@@ -65,7 +65,7 @@ export default function ConversationTips({
           <button
             key={i}
             onClick={() => onSuggestionClick(suggestion)}
-            className="text-xs px-2.5 py-1.5 rounded-lg bg-bg-elevated border border-border text-text-secondary hover:text-primary hover:border-primary/30 transition-colors"
+            className="text-xs px-2.5 py-1.5 rounded-sm bg-surface border border-hairline text-on-surface-variant hover:text-primary hover:border-primary/25 hover:bg-surface transition-colors"
           >
             {suggestion}
           </button>

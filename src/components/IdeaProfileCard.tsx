@@ -14,7 +14,7 @@ function ScoreBadge({ score }: { score: number }) {
     score >= 7
       ? "text-success bg-success-bg border-success/20"
       : score >= 4
-        ? "text-accent bg-accent-muted border-accent/20"
+        ? "text-primary bg-primary/10 border-primary/20"
         : "text-error bg-error-bg border-error/20";
 
   const label =
@@ -27,9 +27,9 @@ function ScoreBadge({ score }: { score: number }) {
           : "High Risk";
 
   return (
-    <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm font-semibold ${color}`}>
+    <div className={`tag-intelligence inline-flex items-center gap-2 px-3 py-1.5 rounded-full border ${color}`}>
       <span className="text-lg">{score}/10</span>
-      <span className="text-xs font-medium opacity-80">{label}</span>
+      <span className="opacity-80">{label}</span>
     </div>
   );
 }
@@ -40,10 +40,10 @@ export default function IdeaProfileCard({ profile, sessionId, onViewDocuments }:
       {/* Header */}
       <div className="text-center space-y-3">
         <div className="text-4xl">🔥</div>
-        <h2 className="text-2xl font-heading font-bold">
+        <h2 className="text-2xl font-display font-light">
           Your Idea Profile
         </h2>
-        <p className="text-text-secondary">
+        <p className="text-on-surface-variant">
           Here&apos;s what we built together in this session
         </p>
       </div>
@@ -54,8 +54,8 @@ export default function IdeaProfileCard({ profile, sessionId, onViewDocuments }:
       </div>
 
       {/* Title */}
-      <div className="p-5 rounded-xl bg-bg-elevated border border-border text-center">
-        <h3 className="text-xl font-heading font-bold text-primary">
+      <div className="p-5 rounded-md bg-surface-bright border border-hairline text-center">
+        <h3 className="text-xl font-display font-normal text-primary">
           {profile.title}
         </h3>
       </div>
@@ -106,24 +106,24 @@ export default function IdeaProfileCard({ profile, sessionId, onViewDocuments }:
         {onViewDocuments && (
           <button
             onClick={onViewDocuments}
-            className="px-6 py-2.5 bg-primary text-text-inverse font-medium rounded-lg hover:bg-primary-hover transition-colors text-sm"
+            className="btn-primary px-6 py-2.5 text-sm"
           >
             View Your Documents →
           </button>
         )}
         <Link
           href="/dashboard/new-session"
-          className={`px-6 py-2.5 font-medium rounded-lg transition-colors text-sm ${
+          className={`px-6 py-2.5 font-medium rounded-md transition-colors text-sm ${
             onViewDocuments
-              ? "border border-border text-text hover:bg-bg-hover"
-              : "bg-primary text-text-inverse hover:bg-primary-hover"
+              ? "border border-hairline text-on-surface hover:bg-surface-bright"
+              : "btn-primary"
           }`}
         >
           Start Another Session
         </Link>
         <Link
           href="/dashboard"
-          className="px-6 py-2.5 border border-border text-text rounded-lg hover:bg-bg-hover transition-colors text-sm"
+          className="px-6 py-2.5 border border-hairline text-on-surface rounded-md hover:bg-surface-bright transition-colors text-sm"
         >
           Back to Dashboard
         </Link>
@@ -142,14 +142,14 @@ function ProfileSection({
   content: string;
 }) {
   return (
-    <div className="p-4 rounded-xl bg-bg-surface border border-border">
+    <div className="p-4 rounded-md bg-surface-container-low border border-hairline">
       <div className="flex items-center gap-2 mb-2">
         <span>{icon}</span>
-        <h4 className="font-heading font-semibold text-sm text-text-secondary">
+        <h4 className="tag-intelligence text-on-surface-variant">
           {title}
         </h4>
       </div>
-      <p className="text-sm text-text leading-relaxed">{content}</p>
+      <p className="text-sm text-on-surface leading-relaxed">{content}</p>
     </div>
   );
 }

@@ -34,8 +34,8 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
   const current = STEPS[step];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/90 backdrop-blur-sm px-6">
-      <div className="max-w-md w-full bg-bg-surface border border-border rounded-2xl p-8 text-center space-y-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-surface/90 backdrop-blur-sm px-6">
+      <div className="max-w-md w-full bg-surface-container-low border border-hairline rounded-md p-8 text-center space-y-6">
         {/* Step indicator */}
         <div className="flex items-center justify-center gap-2">
           {STEPS.map((_, i) => (
@@ -51,8 +51,8 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
         <div className="text-5xl">{current.icon}</div>
 
         <div className="space-y-2">
-          <h2 className="text-xl font-heading font-bold">{current.title}</h2>
-          <p className="text-text-secondary text-sm leading-relaxed">
+          <h2 className="text-xl font-display font-bold">{current.title}</h2>
+          <p className="text-on-surface-variant text-sm leading-relaxed">
             {current.description}
           </p>
         </div>
@@ -61,7 +61,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
           {step > 0 && (
             <button
               onClick={() => setStep(step - 1)}
-              className="px-5 py-2.5 border border-border text-text rounded-lg hover:bg-bg-hover transition-colors text-sm"
+              className="px-5 py-2.5 border border-hairline text-on-surface rounded-md hover:bg-surface-bright transition-colors text-sm"
             >
               Back
             </button>
@@ -69,14 +69,14 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
           {isLast ? (
             <button
               onClick={onComplete}
-              className="px-6 py-2.5 bg-primary text-text-inverse font-medium rounded-lg hover:bg-primary-hover transition-colors text-sm"
+              className="px-6 py-2.5 bg-primary text-surface font-medium rounded-md hover:bg-primary-hover transition-colors text-sm"
             >
               Start Your First Session
             </button>
           ) : (
             <button
               onClick={() => setStep(step + 1)}
-              className="px-6 py-2.5 bg-primary text-text-inverse font-medium rounded-lg hover:bg-primary-hover transition-colors text-sm"
+              className="px-6 py-2.5 bg-primary text-surface font-medium rounded-md hover:bg-primary-hover transition-colors text-sm"
             >
               Next
             </button>
@@ -85,7 +85,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
 
         <button
           onClick={onComplete}
-          className="text-xs text-text-muted hover:text-text-secondary transition-colors"
+          className="text-xs text-on-surface-variant hover:text-on-surface-variant transition-colors"
         >
           Skip intro
         </button>

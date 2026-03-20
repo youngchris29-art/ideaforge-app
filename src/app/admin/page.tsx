@@ -21,13 +21,13 @@ export default function AdminPage() {
 
   if (!authenticated) {
     return (
-      <div className="min-h-screen bg-bg">
+      <div className="min-h-screen bg-surface">
         <Header />
         <div className="max-w-md mx-auto px-6 py-24">
-          <div className="p-8 rounded-2xl border border-border bg-bg-surface space-y-6">
+          <div className="p-8 rounded-md border border-hairline bg-surface-container-low space-y-6">
             <div className="text-center">
-              <h1 className="text-2xl font-heading font-bold">Admin Dashboard</h1>
-              <p className="text-text-secondary text-sm mt-1">Enter the admin password to continue.</p>
+              <h1 className="text-2xl font-display font-bold">Admin Dashboard</h1>
+              <p className="text-on-surface-variant text-sm mt-1">Enter the admin password to continue.</p>
             </div>
             <form onSubmit={handleAuth} className="space-y-4">
               <input
@@ -35,12 +35,12 @@ export default function AdminPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Admin password"
-                className="w-full px-4 py-3 bg-bg-elevated border border-border rounded-xl text-text text-sm placeholder:text-text-muted focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+                className="w-full px-4 py-3 bg-surface-bright border border-hairline rounded-md text-on-surface text-sm placeholder:text-on-surface-variant focus:border-primary focus:border-primary focus:ring-0 outline-none transition-colors"
                 autoFocus
               />
               <button
                 type="submit"
-                className="w-full py-3 bg-primary text-text-inverse font-medium rounded-xl hover:bg-primary-hover transition-colors text-sm"
+                className="w-full py-3 bg-primary text-surface font-medium rounded-md hover:bg-primary-hover transition-colors text-sm"
               >
                 Access Dashboard
               </button>
@@ -52,7 +52,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-surface">
       <Header />
       <AdminDashboardContent />
     </div>
@@ -71,8 +71,8 @@ function AdminDashboardContent() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-8 space-y-8">
       <div>
-        <h1 className="text-3xl font-heading font-bold">Admin Dashboard</h1>
-        <p className="text-text-secondary mt-1">IdeaForge product health overview</p>
+        <h1 className="text-3xl font-display font-bold">Admin Dashboard</h1>
+        <p className="text-on-surface-variant mt-1">IdeaForge product health overview</p>
       </div>
 
       {/* Stats Grid */}
@@ -88,49 +88,49 @@ function AdminDashboardContent() {
 
       {/* Recent Sessions */}
       <div className="space-y-4">
-        <h2 className="text-xl font-heading font-semibold">Recent Sessions</h2>
-        <div className="rounded-xl border border-border bg-bg-surface overflow-hidden">
+        <h2 className="text-xl font-display font-semibold">Recent Sessions</h2>
+        <div className="rounded-md border border-hairline bg-surface-container-low overflow-hidden">
           {recentSessions && recentSessions.length > 0 ? (
-            <div className="divide-y divide-border">
+            <div className="divide-y divide-hairline">
               {recentSessions.map((session) => (
                 <div key={session._id} className="px-5 py-3 flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium">{session.ideaTitle}</p>
-                    <p className="text-xs text-text-muted">
+                    <p className="text-xs text-on-surface-variant">
                       Stage {session.currentStage}/5 · {session.status}
                     </p>
                   </div>
-                  <span className="text-xs text-text-muted">
+                  <span className="text-xs text-on-surface-variant">
                     {new Date(session.createdAt).toLocaleDateString()}
                   </span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="px-5 py-8 text-center text-text-muted text-sm">No sessions yet</p>
+            <p className="px-5 py-8 text-center text-on-surface-variant text-sm">No sessions yet</p>
           )}
         </div>
       </div>
 
       {/* Recent Errors */}
       <div className="space-y-4">
-        <h2 className="text-xl font-heading font-semibold">Recent Errors</h2>
-        <div className="rounded-xl border border-border bg-bg-surface overflow-hidden">
+        <h2 className="text-xl font-display font-semibold">Recent Errors</h2>
+        <div className="rounded-md border border-hairline bg-surface-container-low overflow-hidden">
           {recentErrors && recentErrors.length > 0 ? (
-            <div className="divide-y divide-border">
+            <div className="divide-y divide-hairline">
               {recentErrors.map((error) => (
                 <div key={error._id} className="px-5 py-3">
                   <p className="text-sm text-error font-mono">
                     {error.data ? JSON.parse(error.data).message : "Unknown error"}
                   </p>
-                  <p className="text-xs text-text-muted mt-1">
+                  <p className="text-xs text-on-surface-variant mt-1">
                     {new Date(error.createdAt).toLocaleString()}
                   </p>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="px-5 py-8 text-center text-text-muted text-sm">No errors logged</p>
+            <p className="px-5 py-8 text-center text-on-surface-variant text-sm">No errors logged</p>
           )}
         </div>
       </div>
@@ -174,36 +174,36 @@ function GrantProSection({ allUsers }: { allUsers: any[] | undefined }) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-heading font-semibold">🧪 Test Account Manager</h2>
-          <p className="text-text-secondary text-sm mt-0.5">
+          <h2 className="text-xl font-display font-semibold">🧪 Test Account Manager</h2>
+          <p className="text-on-surface-variant text-sm mt-0.5">
             Grant or revoke pro access for any user — no payment required.
           </p>
         </div>
       </div>
 
-      <div className="rounded-xl border border-border bg-bg-surface overflow-hidden">
-        <div className="p-4 border-b border-border">
+      <div className="rounded-md border border-hairline bg-surface-container-low overflow-hidden">
+        <div className="p-4 border-b border-hairline">
           <input
             type="text"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
             placeholder="Filter by name, email or Clerk ID…"
-            className="w-full px-3 py-2 bg-bg-elevated border border-border rounded-lg text-text text-sm placeholder:text-text-muted focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+            className="w-full px-3 py-2 bg-surface-bright border border-hairline rounded-md text-on-surface text-sm placeholder:text-on-surface-variant focus:border-primary focus:border-primary focus:ring-0 outline-none transition-colors"
           />
         </div>
 
         {!allUsers ? (
-          <p className="px-5 py-8 text-center text-text-muted text-sm">Loading users…</p>
+          <p className="px-5 py-8 text-center text-on-surface-variant text-sm">Loading users…</p>
         ) : filtered.length === 0 ? (
-          <p className="px-5 py-8 text-center text-text-muted text-sm">No users found</p>
+          <p className="px-5 py-8 text-center text-on-surface-variant text-sm">No users found</p>
         ) : (
-          <div className="divide-y divide-border">
+          <div className="divide-y divide-hairline">
             {filtered.map((u) => (
               <div key={u._id} className="px-5 py-3 flex items-center justify-between gap-4">
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium truncate">{u.name || "(no name)"}</p>
-                  <p className="text-xs text-text-muted truncate">{u.email}</p>
-                  <p className="text-xs text-text-muted font-mono truncate">{u.clerkId}</p>
+                  <p className="text-xs text-on-surface-variant truncate">{u.email}</p>
+                  <p className="text-xs text-on-surface-variant font-mono truncate">{u.clerkId}</p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <span
@@ -218,14 +218,14 @@ function GrantProSection({ allUsers }: { allUsers: any[] | undefined }) {
                   {u.subscriptionStatus !== "paid" ? (
                     <button
                       onClick={() => handleGrant(u.clerkId)}
-                      className="px-3 py-1.5 bg-primary text-text-inverse text-xs font-medium rounded-lg hover:bg-primary-hover transition-colors"
+                      className="px-3 py-1.5 bg-primary text-surface text-xs font-medium rounded-md hover:bg-primary-hover transition-colors"
                     >
                       Grant Pro
                     </button>
                   ) : (
                     <button
                       onClick={() => handleReset(u.clerkId)}
-                      className="px-3 py-1.5 bg-bg-elevated border border-border text-text-secondary text-xs font-medium rounded-lg hover:border-primary hover:text-primary transition-colors"
+                      className="px-3 py-1.5 bg-surface-bright border border-hairline text-on-surface-variant text-xs font-medium rounded-md hover:border-primary hover:text-primary transition-colors"
                     >
                       Reset to Free
                     </button>
@@ -247,9 +247,9 @@ function GrantProSection({ allUsers }: { allUsers: any[] | undefined }) {
 
 function StatCard({ label, value }: { label: string; value: number | string }) {
   return (
-    <div className="p-5 rounded-xl border border-border bg-bg-surface">
-      <p className="text-text-muted text-sm">{label}</p>
-      <p className="text-2xl font-heading font-bold text-text mt-1">{value}</p>
+    <div className="p-5 rounded-md border border-hairline bg-surface-container-low">
+      <p className="text-on-surface-variant text-sm">{label}</p>
+      <p className="text-2xl font-display font-bold text-on-surface mt-1">{value}</p>
     </div>
   );
 }

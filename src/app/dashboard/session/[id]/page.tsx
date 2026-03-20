@@ -98,8 +98,8 @@ export default function SessionPage({
   return (
     <div className="flex flex-col" style={{ height: "calc(100svh - 64px)" }}>
       {/* Session goal + progress sub-header */}
-      <div className="w-full bg-surface-container-low px-8 pt-10 pb-6 border-b border-outline-variant/10">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <div className="w-full bg-surface-container-low px-4 pt-5 pb-4 md:px-8 md:pt-10 md:pb-6 border-b border-outline-variant/10">
+        <div className="max-w-4xl mx-auto space-y-3 md:space-y-6">
           {/* Top row: back + view toggle */}
           <div className="flex items-center justify-between">
             <Link
@@ -116,7 +116,7 @@ export default function SessionPage({
                   <button
                     key={mode}
                     onClick={() => setViewMode(mode)}
-                    className={`px-4 py-1.5 text-xs font-body font-medium rounded-full capitalize transition-all relative ${
+                    className={`px-3 md:px-4 py-1.5 text-xs font-body font-medium rounded-full capitalize transition-all relative ${
                       viewMode === mode
                         ? "btn-primary"
                         : "text-on-surface/40 hover:text-on-surface"
@@ -136,11 +136,11 @@ export default function SessionPage({
           </div>
 
           {/* Goal display */}
-          <div className="space-y-2">
-            <span className="text-xs uppercase tracking-[0.2em] text-primary/60 font-body font-medium">
+          <div className="space-y-1.5">
+            <span className="text-[10px] uppercase tracking-[0.2em] text-primary/60 font-body font-medium">
               Active Session Goal
             </span>
-            <h1 className="text-2xl md:text-3xl serif-display italic leading-snug text-on-background">
+            <h1 className="text-lg md:text-3xl serif-display italic leading-snug text-on-background line-clamp-2 md:line-clamp-none">
               &ldquo;{session.ideaTitle}&rdquo;
             </h1>
           </div>
