@@ -69,21 +69,21 @@ export default function NewSessionPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-12">
+    <div className="max-w-2xl mx-auto px-6 py-12">
       {/* Back link */}
       <Link
         href="/dashboard"
-        className="text-sm text-text-secondary hover:text-text transition-colors mb-8 inline-block"
+        className="text-sm text-on-surface-variant hover:text-on-surface transition-colors mb-8 inline-block"
       >
         &larr; Back to Dashboard
       </Link>
 
       {/* Title */}
       <div className="mb-8">
-        <h1 className="text-3xl font-heading font-bold mb-2">
-          Let&apos;s <span className="text-primary">forge</span> your idea
+        <h1 className="text-3xl font-display font-light mb-2">
+          Let&apos;s <span className="text-primary italic">forge</span> your idea
         </h1>
-        <p className="text-text-secondary">
+        <p className="text-on-surface-variant">
           Start by telling us about your idea in a sentence or two. Our AI will
           then walk you through a structured conversation to build out a complete
           launch plan.
@@ -92,21 +92,21 @@ export default function NewSessionPage() {
 
       {/* Error */}
       {error && (
-        <div className="mb-6 p-4 bg-error-bg border border-error/20 rounded-xl">
+        <div className="mb-6 p-4 bg-error/8 border border-error/20 rounded-md">
           <p className="text-sm text-error">{error}</p>
         </div>
       )}
 
       {/* Free tier notice */}
       {convexUser && convexUser.subscriptionStatus === "free" && (
-        <div className="mb-6 p-4 bg-accent-muted border border-accent/20 rounded-xl">
-          <p className="text-sm text-accent">
+        <div className="mb-6 p-4 bg-primary/8 border border-hairline rounded-md">
+          <p className="text-sm text-primary">
             {convexUser.sessionsRemaining > 0
               ? `You have ${convexUser.sessionsRemaining} free session${convexUser.sessionsRemaining === 1 ? "" : "s"} remaining`
               : (
                 <>
                   You&apos;ve used all your free sessions.{" "}
-                  <Link href="/checkout" className="underline font-semibold hover:text-primary transition-colors">
+                  <Link href="/checkout" className="underline font-semibold hover:text-primary-light transition-colors">
                     Upgrade to Pro
                   </Link>{" "}
                   for unlimited sessions!
@@ -128,7 +128,7 @@ export default function NewSessionPage() {
         <div>
           <label
             htmlFor="idea"
-            className="block text-sm font-medium text-text-secondary mb-2"
+            className="block text-sm font-medium text-on-surface-variant mb-2"
           >
             What&apos;s your business idea?
           </label>
@@ -138,27 +138,27 @@ export default function NewSessionPage() {
             onChange={(e) => setIdeaTitle(e.target.value)}
             placeholder="e.g., A marketplace connecting freelance designers with small businesses that need branding..."
             rows={4}
-            className="w-full px-4 py-3 bg-bg-surface border border-border rounded-xl text-text placeholder:text-text-muted focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors resize-none"
+            className="w-full px-4 py-3 bg-surface-container-low border border-hairline rounded-md text-on-surface placeholder:text-on-surface-variant focus:border-primary focus:ring-0 outline-none transition-colors resize-none"
             maxLength={500}
             disabled={isCreating}
           />
           <div className="flex justify-between mt-1.5">
-            <p className="text-xs text-text-muted">
+            <p className="text-xs text-on-surface-variant">
               Be as specific as you can — who&apos;s it for and what problem
               does it solve?
             </p>
-            <p className="text-xs text-text-muted">{ideaTitle.length}/500</p>
+            <p className="text-xs text-on-surface-variant">{ideaTitle.length}/500</p>
           </div>
         </div>
 
         <button
           type="submit"
           disabled={!ideaTitle.trim() || isCreating || !convexUser}
-          className="w-full py-3.5 bg-primary text-text-inverse font-semibold rounded-xl hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all text-lg shadow-glow hover:shadow-lg"
+          className="btn-primary w-full py-3.5 font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-lg shadow-[0_8px_60px_rgba(0,0,0,0.4)]"
         >
           {isCreating ? (
             <span className="flex items-center justify-center gap-2">
-              <span className="w-5 h-5 border-2 border-text-inverse/30 border-t-text-inverse rounded-full animate-spin" />
+              <span className="w-5 h-5 border-2 border-surface/30 border-t-surface rounded-full animate-spin" />
               Starting Your Session...
             </span>
           ) : (
@@ -168,8 +168,8 @@ export default function NewSessionPage() {
       </form>
 
       {/* What to expect */}
-      <div className="mt-12 p-6 rounded-xl border border-border bg-bg-surface">
-        <h3 className="font-heading font-semibold mb-3">What happens next?</h3>
+      <div className="mt-12 p-6 rounded-md border border-hairline bg-surface-container-low">
+        <h3 className="font-display font-normal mb-3">What happens next?</h3>
         <div className="space-y-3">
           {[
             { num: "1", title: "Problem Validation", desc: "We explore whether the problem is real and painful" },
@@ -179,19 +179,19 @@ export default function NewSessionPage() {
             { num: "5", title: "Launch Strategy", desc: "We build your plan to get first customers" },
           ].map((step) => (
             <div key={step.num} className="flex gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">
+              <span className="flex-shrink-0 w-6 h-6 rounded-sm bg-primary/10 text-primary text-xs font-normal flex items-center justify-center">
                 {step.num}
               </span>
               <div>
                 <span className="font-medium text-sm">{step.title}</span>
-                <span className="text-text-secondary text-sm">
+                <span className="text-on-surface-variant text-sm">
                   {" "}— {step.desc}
                 </span>
               </div>
             </div>
           ))}
         </div>
-        <p className="text-text-muted text-xs mt-4">
+        <p className="text-on-surface-variant text-xs mt-4">
           The whole conversation takes about 30-45 minutes
         </p>
       </div>

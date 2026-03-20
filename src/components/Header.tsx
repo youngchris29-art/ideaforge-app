@@ -2,19 +2,37 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { UserButton, useUser } from "@clerk/nextjs";
 
 export default function Header() {
   const { user, isLoaded } = useUser();
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const navLink = (href: string, label: string) => {
+    const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
+    return (
+      <Link
+        href={href}
+        className={
+          isActive
+            ? "text-sm tracking-wide text-primary font-bold border-b-2 border-primary pb-1 transition-colors"
+            : "text-sm tracking-wide text-on-surface/60 hover:text-on-surface transition-colors"
+        }
+      >
+        {label}
+      </Link>
+    );
+  };
+
   return (
-    <header className="sticky top-0 z-50 bg-bg/80 backdrop-blur-md border-b border-border">
-      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-surface/70 backdrop-blur-2xl shadow-[0px_12px_32px_rgba(0,0,0,0.4)]">
+      <div className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link
           href={user ? "/dashboard" : "/"}
-          className="text-xl font-heading font-bold text-primary hover:text-primary-light transition-colors"
+          className="text-2xl font-display font-normal italic text-primary hover:text-primary-light transition-colors"
           aria-label="IdeaForge home"
         >
           IdeaForge
@@ -22,40 +40,36 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         {isLoaded && user && (
-          <nav className="hidden md:flex items-center gap-6" aria-label="Main navigation">
-            <Link href="/dashboard" className="text-sm text-text-secondary hover:text-text transition-colors">
-              Dashboard
-            </Link>
-            <Link href="/dashboard/new-session" className="text-sm font-medium text-primary hover:text-primary-light transition-colors">
-              + New Session
-            </Link>
-            <Link href="/pricing" className="text-sm text-text-secondary hover:text-text transition-colors">
-              Pricing
-            </Link>
-            <Link href="/account" className="text-sm text-text-secondary hover:text-text transition-colors">
-              Account
-            </Link>
+          <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
+            {navLink("/dashboard", "Dashboard")}
+            {navLink("/dashboard/new-session", "New Session")}
+            {navLink("/pricing", "Pricing")}
+            {navLink("/account", "Account")}
+          </nav>
+        )}
+
+        {isLoaded && !user && (
+          <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
+            {navLink("/pricing", "Pricing")}
+            {navLink("/help", "FAQ")}
           </nav>
         )}
 
         {/* Right side */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {isLoaded && user ? (
             <>
-              <span className="hidden md:inline text-sm text-text-secondary">
-                {user.firstName || user.emailAddresses[0]?.emailAddress}
-              </span>
               <UserButton
                 appearance={{
                   elements: {
-                    avatarBox: "w-8 h-8",
+                    avatarBox: "w-8 h-8 rounded-full border border-outline-variant/20",
                   },
                 }}
               />
               {/* Mobile menu button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 text-text-secondary hover:text-text transition-colors"
+                className="md:hidden p-2 text-on-surface/60 hover:text-on-surface transition-colors"
                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={mobileMenuOpen}
               >
@@ -71,14 +85,11 @@ export default function Header() {
               </button>
             </>
           ) : (
-            <div className="flex items-center gap-3">
-              <Link href="/pricing" className="text-sm text-text-secondary hover:text-text transition-colors hidden sm:inline">
-                Pricing
-              </Link>
-              <Link href="/auth/sign-in" className="text-sm text-text-secondary hover:text-text transition-colors">
+            <div className="flex items-center gap-4">
+              <Link href="/auth/sign-in" className="text-sm text-on-surface/60 hover:text-on-surface transition-colors">
                 Sign In
               </Link>
-              <Link href="/auth/sign-up" className="px-4 py-2 bg-primary text-text-inverse font-medium rounded-lg hover:bg-primary-hover transition-colors text-sm">
+              <Link href="/auth/sign-up" className="btn-primary px-6 py-2 text-sm">
                 Get Started
               </Link>
             </div>
@@ -88,43 +99,28 @@ export default function Header() {
 
       {/* Mobile Navigation Drawer */}
       {isLoaded && user && mobileMenuOpen && (
-        <nav className="md:hidden border-t border-border bg-bg-surface" aria-label="Mobile navigation">
-          <div className="px-6 py-4 space-y-1">
-            <Link
-              href="/dashboard"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-3 px-3 text-sm text-text-secondary hover:text-text hover:bg-bg-hover rounded-lg transition-colors"
-            >
-              Dashboard
-            </Link>
-            <Link
-              href="/dashboard/new-session"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-3 px-3 text-sm font-medium text-primary hover:bg-primary/5 rounded-lg transition-colors"
-            >
-              + New Session
-            </Link>
-            <Link
-              href="/pricing"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-3 px-3 text-sm text-text-secondary hover:text-text hover:bg-bg-hover rounded-lg transition-colors"
-            >
-              Pricing
-            </Link>
-            <Link
-              href="/account"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-3 px-3 text-sm text-text-secondary hover:text-text hover:bg-bg-hover rounded-lg transition-colors"
-            >
-              Account
-            </Link>
-            <Link
-              href="/help"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-3 px-3 text-sm text-text-secondary hover:text-text hover:bg-bg-hover rounded-lg transition-colors"
-            >
-              Help & FAQ
-            </Link>
+        <nav className="md:hidden bg-surface-container-low border-t border-hairline" aria-label="Mobile navigation">
+          <div className="px-8 py-4 space-y-1">
+            {[
+              { href: "/dashboard", label: "Dashboard" },
+              { href: "/dashboard/new-session", label: "New Session" },
+              { href: "/pricing", label: "Pricing" },
+              { href: "/account", label: "Account" },
+              { href: "/help", label: "Help & FAQ" },
+            ].map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block py-3 px-3 text-sm rounded-sm transition-colors ${
+                  pathname === href
+                    ? "text-primary font-medium"
+                    : "text-on-surface/60 hover:text-on-surface hover:bg-surface-bright"
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
           </div>
         </nav>
       )}

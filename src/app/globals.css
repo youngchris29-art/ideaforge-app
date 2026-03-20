@@ -1,60 +1,93 @@
 @import "tailwindcss";
 
 /* ==========================================
-   IdeaForge Design Tokens
-   Warm & Creative — Dark Mode First
+   Obsidian Archive Design Tokens
+   Sovereign Workspace — Editorial Dark Mode
    ========================================== */
 
 @theme {
-  /* Primary Colors */
-  --color-primary: #D4A574;
-  --color-primary-hover: #C4925F;
-  --color-primary-light: #E8C9A0;
+  /* Primary: Fidelity Gold */
+  --color-primary: #f1c97d;
+  --color-primary-hover: #d4ad65;
+  --color-primary-light: #f5daa0;
+  --color-primary-fixed: #ffdea5;
+  --color-primary-fixed-dim: #e9c176;
+  --color-primary-container: #d4ad65;
+  --color-on-primary: #412d00;
+  --color-on-primary-container: #5b4000;
+  --color-on-primary-fixed: #261900;
+  --color-on-primary-fixed-variant: #5d4201;
+  --color-inverse-primary: #775a19;
 
-  /* Secondary Colors */
-  --color-secondary: #5B3A8D;
-  --color-secondary-hover: #4A2F73;
-  --color-secondary-light: #7B5AAD;
+  /* Surface Hierarchy (tonal layering) */
+  --color-surface: #131313;
+  --color-surface-dim: #131313;
+  --color-surface-bright: #3a3939;
+  --color-surface-tint: #e9c176;
+  --color-surface-container-lowest: #0e0e0e;
+  --color-surface-lowest: #0e0e0e;
+  --color-surface-container-low: #1c1b1b;
+  --color-surface-container: #201f1f;
+  --color-surface-container-high: #2a2a2a;
+  --color-surface-container-highest: #353534;
+  --color-surface-variant: #353534;
+  --color-inverse-surface: #e5e2e1;
+  --color-inverse-on-surface: #313030;
 
-  /* Accent Colors */
-  --color-accent: #F4D35E;
-  --color-accent-hover: #E5C44F;
-  --color-accent-muted: #F4D35E33;
+  /* Secondary */
+  --color-secondary: #c8c6c5;
+  --color-secondary-container: #474746;
+  --color-secondary-fixed: #e4e2e1;
+  --color-secondary-fixed-dim: #c8c6c5;
+  --color-on-secondary: #303030;
+  --color-on-secondary-container: #b7b5b4;
+  --color-on-secondary-fixed: #1b1c1c;
+  --color-on-secondary-fixed-variant: #474746;
 
-  /* Backgrounds (Dark Mode Default) */
-  --color-bg: #0F0F0F;
-  --color-bg-surface: #1A1A1A;
-  --color-bg-elevated: #242424;
-  --color-bg-hover: #2A2A2A;
+  /* Tertiary */
+  --color-tertiary: #cecece;
+  --color-tertiary-container: #b2b3b3;
+  --color-tertiary-fixed: #e2e2e2;
+  --color-tertiary-fixed-dim: #c6c6c6;
+  --color-on-tertiary: #2f3131;
+  --color-on-tertiary-container: #444546;
+  --color-on-tertiary-fixed: #1a1c1c;
+  --color-on-tertiary-fixed-variant: #454747;
 
   /* Text */
-  --color-text: #F5F0EB;
-  --color-text-secondary: #A89F97;
-  --color-text-muted: #6B6560;
-  --color-text-inverse: #0F0F0F;
+  --color-on-surface: #e5e2e1;
+  --color-on-surface-variant: #d0c5af;
+  --color-on-background: #e5e2e1;
+  --color-background: #131313;
 
   /* Borders */
-  --color-border: #333333;
-  --color-border-hover: #4A4A4A;
-  --color-border-focus: #D4A574;
+  --color-outline: #99907c;
+  --color-outline-variant: #4d4635;
+  --color-hairline: rgba(229, 226, 225, 0.12);
+  --color-border-focus: #f1c97d;
+
+  /* Error */
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-on-error: #690005;
+  --color-on-error-container: #ffdad6;
 
   /* Semantic Colors */
   --color-success: #4ADE80;
   --color-success-bg: #4ADE8015;
   --color-warning: #FBBF24;
   --color-warning-bg: #FBBF2415;
-  --color-error: #F87171;
-  --color-error-bg: #F8717115;
   --color-info: #60A5FA;
   --color-info-bg: #60A5FA15;
 
-  /* Shadows */
-  --shadow-glow: 0 0 20px rgba(212, 165, 116, 0.15);
+  /* Shadows — ambient, diffused */
+  --shadow-glow: 0 8px 60px rgba(0, 0, 0, 0.4);
+  --shadow-nav: 0px 12px 32px rgba(0, 0, 0, 0.4);
 
   /* Typography */
-  --font-heading: "Poppins", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
-  --font-mono: "Fira Code", ui-monospace, monospace;
+  --font-display: "Newsreader", Georgia, serif;
+  --font-body: "Instrument Sans", system-ui, sans-serif;
+  --font-mono: ui-monospace, "Fira Code", monospace;
 }
 
 /* Base Styles */
@@ -63,31 +96,32 @@ html {
 }
 
 body {
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
   font-family: var(--font-body);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  font-weight: 600;
-  line-height: 1.2;
+  font-family: var(--font-display);
+  font-weight: 300;
+  line-height: 1.15;
 }
 
 /* Focus Styles */
 *:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 /* Selection */
 ::selection {
   background-color: var(--color-primary);
-  color: var(--color-text-inverse);
+  color: var(--color-surface);
 }
 
 /* Scrollbar */
@@ -96,19 +130,83 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-bg);
+  background: var(--color-surface);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
+  background: var(--color-surface-bright);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-hover);
+  background: #4a4948;
 }
 
-/* Page transition animations (TASK-073) */
+/* Editorial Gradient — primary CTAs */
+.btn-primary {
+  background: linear-gradient(135deg, #f1c97d, #d4ad65);
+  color: #412d00;
+  border-radius: 4px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* Material Symbols — weight 300, no fill */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  user-select: none;
+}
+
+/* Midnight Glass — navigation and floating panels */
+.glass-panel {
+  background-color: rgba(19, 19, 19, 0.70);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* Intelligence Tags — 10px micro-labels */
+.tag-intelligence {
+  font-size: 0.625rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-family: var(--font-body);
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Hairline border utility */
+.border-hairline {
+  border: 1px solid rgba(229, 226, 225, 0.12);
+}
+
+/* Hide scrollbar utility */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Serif display shorthand */
+.serif-display {
+  font-family: "Newsreader", Georgia, serif;
+}
+
+/* Page transition animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -160,7 +258,7 @@ button {
 
 .hover-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 60px rgba(0, 0, 0, 0.4);
 }
 
 /* Safe area padding for mobile (iPhone notch) */

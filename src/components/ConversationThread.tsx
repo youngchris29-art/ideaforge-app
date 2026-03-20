@@ -28,12 +28,10 @@ export default function ConversationThread({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Auto-scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isSending]);
 
-  // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -41,7 +39,6 @@ export default function ConversationThread({
     }
   }, [input]);
 
-  // Hide tips after user sends a message in the current stage
   const userMessagesCount = messages.filter((m) => m.role === "user").length;
   useEffect(() => {
     setShowTips(true);
@@ -50,12 +47,9 @@ export default function ConversationThread({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isSending || isCompleted) return;
-
     onSendMessage(input.trim());
     setInput("");
     setShowTips(false);
-
-    // Reset textarea height
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
     }
@@ -77,48 +71,52 @@ export default function ConversationThread({
   return (
     <div className="flex flex-col h-full">
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-4 sm:py-6 space-y-3 sm:space-y-4">
+      <div className="flex-1 overflow-y-auto hide-scrollbar px-6 py-12 space-y-10">
         {messages.map((message) => (
           <div
             key={message._id}
-            className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+            className={`flex flex-col ${message.role === "user" ? "items-end self-end max-w-md ml-auto" : "items-start max-w-2xl"} group`}
           >
+            {/* Label row */}
+            <div className={`flex items-center gap-3 mb-3 ${message.role === "user" ? "justify-end" : ""}`}>
+              {message.role === "assistant" && (
+                <div className="w-6 h-6 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-primary" style={{ fontSize: "14px" }}>auto_awesome</span>
+                </div>
+              )}
+              <span
+                className={`text-[10px] uppercase tracking-widest font-bold font-body ${
+                  message.role === "assistant" ? "text-primary" : "text-on-surface/40"
+                }`}
+              >
+                {message.role === "user" ? "You" : "IdeaForge"}
+              </span>
+            </div>
+
+            {/* Bubble */}
             <div
-              className={`max-w-[85%] md:max-w-[75%] rounded-2xl px-4 py-3 ${
+              className={`leading-relaxed text-sm md:text-base whitespace-pre-wrap ${
                 message.role === "user"
-                  ? "bg-primary/15 text-text border border-primary/20"
-                  : "bg-bg-elevated text-text border border-border"
+                  ? "p-5 bg-surface-container-highest rounded-xl text-on-surface/90"
+                  : "p-6 bg-surface-container-low border border-outline-variant/10 rounded-xl text-on-surface/90"
               }`}
             >
-              {/* Role label */}
-              <div className="flex items-center gap-2 mb-1">
-                <span
-                  className={`text-xs font-semibold ${
-                    message.role === "user" ? "text-primary" : "text-secondary-light"
-                  }`}
-                >
-                  {message.role === "user" ? "You" : "IdeaForge"}
-                </span>
-              </div>
-
-              {/* Message content */}
-              <div className="text-sm leading-relaxed whitespace-pre-wrap">
-                {message.content}
-              </div>
+              {message.content}
             </div>
           </div>
         ))}
 
         {/* Typing indicator */}
         {isSending && (
-          <div className="flex justify-start">
-            <div className="bg-bg-elevated border border-border rounded-2xl px-4 py-3">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-secondary-light">
-                  IdeaForge
-                </span>
+          <div className="flex flex-col items-start max-w-2xl group">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-6 h-6 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-primary" style={{ fontSize: "14px" }}>auto_awesome</span>
               </div>
-              <div className="flex items-center gap-1.5 mt-2">
+              <span className="text-[10px] uppercase tracking-widest text-primary font-bold font-body">IdeaForge</span>
+            </div>
+            <div className="p-6 bg-surface-container-low border border-outline-variant/10 rounded-xl">
+              <div className="flex items-center gap-1.5">
                 <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce [animation-delay:0ms]" />
                 <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce [animation-delay:150ms]" />
                 <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce [animation-delay:300ms]" />
@@ -127,15 +125,12 @@ export default function ConversationThread({
           </div>
         )}
 
-        {/* Error message */}
+        {/* Error */}
         {error && (
           <div className="flex justify-center">
-            <div className="bg-error-bg border border-error/20 rounded-xl px-4 py-3 max-w-md text-center">
+            <div className="bg-error-container/20 border border-error/20 rounded-xl px-6 py-4 max-w-md text-center">
               <p className="text-sm text-error">{error}</p>
-              <button
-                onClick={onClearError}
-                className="text-xs text-error/70 hover:text-error mt-1 underline"
-              >
+              <button onClick={onClearError} className="text-xs text-error/70 hover:text-error mt-2 underline">
                 Dismiss
               </button>
             </div>
@@ -147,16 +142,13 @@ export default function ConversationThread({
 
       {/* Conversation tips */}
       {!isCompleted && !isSending && showTips && userMessagesCount > 0 && (
-        <ConversationTips
-          currentStage={currentStage}
-          onSuggestionClick={handleSuggestionClick}
-        />
+        <ConversationTips currentStage={currentStage} onSuggestionClick={handleSuggestionClick} />
       )}
 
       {/* Completed banner */}
       {isCompleted && (
-        <div className="border-t border-border bg-bg-surface/50 px-4 py-3 text-center">
-          <p className="text-sm text-text-secondary">
+        <div className="border-t border-outline-variant/10 bg-surface-container-low px-6 py-4 text-center">
+          <p className="text-sm text-on-surface-variant font-body">
             This session is complete. View your Idea Profile above.
           </p>
         </div>
@@ -164,37 +156,45 @@ export default function ConversationThread({
 
       {/* Input area */}
       {!isCompleted && (
-        <div className="border-t border-border bg-bg-surface/50 px-2 sm:px-4 py-2 sm:py-3 safe-area-bottom">
-          <form onSubmit={handleSubmit} className="flex items-end gap-2 sm:gap-3">
-            <div className="flex-1 relative">
-              <textarea
-                ref={textareaRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Share your thoughts..."
-                disabled={isSending}
-                rows={1}
-                className="w-full px-3 sm:px-4 py-2.5 bg-bg-elevated border border-border rounded-xl text-text text-sm placeholder:text-text-muted focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors resize-none disabled:opacity-50"
-                maxLength={2000}
-              />
-              {input.length > 1500 && (
-                <span className="absolute right-3 bottom-2 text-xs text-text-muted">
-                  {input.length}/2000
-                </span>
-              )}
-            </div>
-            <button
-              type="submit"
-              disabled={!input.trim() || isSending}
-              className="px-3 sm:px-4 py-2.5 bg-primary text-text-inverse font-medium rounded-xl hover:bg-primary-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors text-sm flex-shrink-0"
-            >
-              {isSending ? "..." : "Send"}
-            </button>
-          </form>
-          <p className="text-xs text-text-muted mt-1.5 px-1 hidden sm:block">
-            Press Enter to send, Shift+Enter for new line
-          </p>
+        <div className="sticky bottom-0 w-full bg-gradient-to-t from-background via-background/95 to-transparent pt-12 pb-8 px-6">
+          <div className="max-w-4xl mx-auto">
+            <form onSubmit={handleSubmit} className="relative group">
+              {/* Glow effect */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-primary-container/20 rounded-xl blur opacity-25 group-focus-within:opacity-50 transition duration-500 pointer-events-none" />
+              {/* Input container */}
+              <div className="relative flex items-center bg-surface-container-low border border-outline-variant/20 rounded-xl p-2 pl-6 focus-within:border-primary/50 transition-all">
+                <textarea
+                  ref={textareaRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Inquire further or define your preference..."
+                  disabled={isSending}
+                  rows={1}
+                  className="w-full bg-transparent border-none focus:ring-0 text-sm text-on-surface placeholder:text-on-surface/30 py-3 outline-none resize-none disabled:opacity-50"
+                  maxLength={2000}
+                />
+                <div className="flex items-center gap-2 pr-2 shrink-0">
+                  {input.length > 1500 && (
+                    <span className="text-xs text-on-surface-variant">{input.length}/2000</span>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={!input.trim() || isSending}
+                    className="bg-gradient-to-br from-primary to-primary-container text-on-primary px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    <span>{isSending ? "..." : "Send"}</span>
+                    {!isSending && (
+                      <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>north_east</span>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </form>
+            <p className="text-[9px] text-center mt-4 uppercase tracking-[0.3em] text-on-surface/20 font-bold font-body">
+              Curated Intelligence for Intellectual Labor • Press Enter to send
+            </p>
+          </div>
         </div>
       )}
     </div>

@@ -4,9 +4,10 @@ import { use, useState, useEffect } from "react";
 import { useConversation } from "@/hooks/useConversation";
 import { useDocuments } from "@/hooks/useDocuments";
 import { useSubscription } from "@/hooks/useSubscription";
+import { STAGES } from "@/lib/conversation-framework";
 import ConversationThread from "@/components/ConversationThread";
-import StageProgress from "@/components/StageProgress";
 import IdeaProfileCard from "@/components/IdeaProfileCard";
+// StageProgress replaced by inline progress in this page
 import DocumentViewer from "@/components/DocumentViewer";
 import UpgradeModal from "@/components/UpgradeModal";
 import SocialShare from "@/components/SocialShare";
@@ -47,7 +48,6 @@ export default function SessionPage({
   const { isPaid } = useSubscription();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
-  // Auto-generate documents when session completes and profile is ready
   const [hasTriggeredGeneration, setHasTriggeredGeneration] = useState(false);
 
   useEffect(() => {
@@ -63,12 +63,10 @@ export default function SessionPage({
     }
   }, [isCompleted, ideaProfile, hasDocuments, isGenerating, hasTriggeredGeneration, generateDocuments]);
 
-  // Auto-switch to documents view when documents become available
-  useEffect(() => {
-    if (hasDocuments && viewMode === "conversation" && isCompleted) {
-      // Don't auto-switch — let the user decide via the banner
-    }
-  }, [hasDocuments, viewMode, isCompleted]);
+  // Compute stage progress
+  const currentStageNum = session?.currentStage ?? 1;
+  const progressPct = isCompleted ? 100 : Math.round(((currentStageNum - 1) / 5) * 100);
+  const currentStageName = STAGES.find((s) => s.id === currentStageNum)?.name || "Problem Validation";
 
   // Loading state
   if (isLoading) {
@@ -76,7 +74,7 @@ export default function SessionPage({
       <div className="flex items-center justify-center h-[60vh]">
         <div className="text-center space-y-3">
           <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin mx-auto" />
-          <p className="text-text-secondary text-sm">Loading session...</p>
+          <p className="text-on-surface-variant text-sm font-body">Loading session...</p>
         </div>
       </div>
     );
@@ -86,13 +84,10 @@ export default function SessionPage({
   if (!session) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
-        <div className="text-center space-y-3">
-          <div className="text-4xl">🔍</div>
-          <h2 className="font-heading font-semibold text-lg">Session not found</h2>
-          <Link
-            href="/dashboard"
-            className="text-primary text-sm hover:underline"
-          >
+        <div className="text-center space-y-4">
+          <span className="material-symbols-outlined text-4xl text-primary/40 block">search</span>
+          <h2 className="font-display font-normal text-lg">Session not found</h2>
+          <Link href="/dashboard" className="text-primary text-sm hover:underline font-body">
             Back to Dashboard
           </Link>
         </div>
@@ -101,79 +96,74 @@ export default function SessionPage({
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-73px)]">
-      {/* Session header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/dashboard"
-            className="text-text-secondary hover:text-text transition-colors text-sm"
-          >
-            &larr;
-          </Link>
-          <div>
-            <h1 className="font-heading font-semibold text-sm truncate max-w-[250px] md:max-w-none">
-              {session.ideaTitle}
+    <div className="flex flex-col" style={{ height: "calc(100svh - 64px)" }}>
+      {/* Session goal + progress sub-header */}
+      <div className="w-full bg-surface-container-low px-8 pt-10 pb-6 border-b border-outline-variant/10">
+        <div className="max-w-4xl mx-auto space-y-6">
+          {/* Top row: back + view toggle */}
+          <div className="flex items-center justify-between">
+            <Link
+              href="/dashboard"
+              className="flex items-center gap-2 text-on-surface/40 hover:text-on-surface transition-colors text-sm font-body"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>arrow_back</span>
+              Dashboard
+            </Link>
+
+            {isCompleted && ideaProfile && (
+              <div className="flex bg-surface-container rounded-full border border-outline-variant/20 p-1">
+                {(["conversation", "profile", "documents"] as ViewMode[]).map((mode) => (
+                  <button
+                    key={mode}
+                    onClick={() => setViewMode(mode)}
+                    className={`px-4 py-1.5 text-xs font-body font-medium rounded-full capitalize transition-all relative ${
+                      viewMode === mode
+                        ? "btn-primary"
+                        : "text-on-surface/40 hover:text-on-surface"
+                    }`}
+                  >
+                    {mode}
+                    {mode === "documents" && hasDocuments && viewMode !== "documents" && (
+                      <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-success rounded-full" />
+                    )}
+                    {mode === "documents" && isGenerating && viewMode !== "documents" && (
+                      <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-primary rounded-full animate-pulse" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Goal display */}
+          <div className="space-y-2">
+            <span className="text-xs uppercase tracking-[0.2em] text-primary/60 font-body font-medium">
+              Active Session Goal
+            </span>
+            <h1 className="text-2xl md:text-3xl serif-display italic leading-snug text-on-background">
+              &ldquo;{session.ideaTitle}&rdquo;
             </h1>
-            <p className="text-xs text-text-muted">
-              {isCompleted ? "Completed" : "In progress"}
-            </p>
+          </div>
+
+          {/* Progress bar */}
+          <div className="relative w-full h-[2px] bg-surface-container-highest rounded-full overflow-hidden">
+            <div
+              className="absolute left-0 top-0 h-full bg-primary transition-all duration-1000"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+
+          <div className="flex justify-between text-[10px] uppercase tracking-widest text-on-background/40 font-bold font-body">
+            <span>
+              {isCompleted ? "Session Complete" : `Phase 0${currentStageNum}: ${currentStageName}`}
+            </span>
+            <span>{progressPct}% Complete</span>
           </div>
         </div>
-
-        {/* View toggle (only when completed with profile) */}
-        {isCompleted && ideaProfile && (
-          <div className="flex bg-bg-elevated rounded-lg border border-border">
-            <button
-              onClick={() => setViewMode("conversation")}
-              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
-                viewMode === "conversation"
-                  ? "bg-primary text-text-inverse"
-                  : "text-text-secondary hover:text-text"
-              }`}
-            >
-              Conversation
-            </button>
-            <button
-              onClick={() => setViewMode("profile")}
-              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
-                viewMode === "profile"
-                  ? "bg-primary text-text-inverse"
-                  : "text-text-secondary hover:text-text"
-              }`}
-            >
-              Profile
-            </button>
-            <button
-              onClick={() => setViewMode("documents")}
-              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors relative ${
-                viewMode === "documents"
-                  ? "bg-primary text-text-inverse"
-                  : "text-text-secondary hover:text-text"
-              }`}
-            >
-              Documents
-              {hasDocuments && viewMode !== "documents" && (
-                <span className="absolute -top-1 -right-1 w-2 h-2 bg-success rounded-full" />
-              )}
-              {isGenerating && viewMode !== "documents" && (
-                <span className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full animate-pulse" />
-              )}
-            </button>
-          </div>
-        )}
       </div>
 
-      {/* Stage progress */}
-      {viewMode !== "documents" && (
-        <StageProgress
-          currentStage={session.currentStage}
-          isCompleted={isCompleted}
-        />
-      )}
-
       {/* Main content */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden min-h-0">
         {viewMode === "documents" ? (
           <DocumentViewer
             documents={documents}
@@ -200,35 +190,33 @@ export default function SessionPage({
             onSendMessage={sendMessage}
             error={error}
             onClearError={clearError}
-            currentStage={session.currentStage}
+            currentStage={currentStageNum}
           />
         )}
       </div>
 
       {/* Bottom banners */}
       {isCompleted && !ideaProfile && (
-        <div className="px-4 py-3 border-t border-border bg-primary/5 text-center">
+        <div className="px-6 py-4 border-t border-outline-variant/10 bg-surface-container-low text-center">
           <div className="flex items-center justify-center gap-2">
             <div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-            <p className="text-sm text-text-secondary">
-              Generating your idea profile...
-            </p>
+            <p className="text-sm text-on-surface-variant font-body">Generating your idea profile...</p>
           </div>
         </div>
       )}
 
       {isCompleted && ideaProfile && viewMode === "conversation" && (
-        <div className="px-4 py-3 border-t border-border bg-primary/5 text-center flex items-center justify-center gap-4">
+        <div className="px-6 py-4 border-t border-outline-variant/10 bg-surface-container-low flex items-center justify-center gap-6">
           <button
             onClick={() => setViewMode("profile")}
-            className="text-sm text-primary font-medium hover:underline"
+            className="text-sm text-primary font-medium hover:underline font-body"
           >
             View Idea Profile
           </button>
-          <span className="text-text-muted text-xs">|</span>
+          <span className="text-outline text-xs">|</span>
           <button
             onClick={() => setViewMode("documents")}
-            className="text-sm text-primary font-medium hover:underline flex items-center gap-1.5"
+            className="text-sm text-primary font-medium hover:underline flex items-center gap-1.5 font-body"
           >
             {isGenerating ? (
               <>
@@ -245,10 +233,10 @@ export default function SessionPage({
       )}
 
       {isCompleted && ideaProfile && viewMode === "profile" && (
-        <div className="px-4 py-3 border-t border-border bg-primary/5 text-center">
+        <div className="px-6 py-4 border-t border-outline-variant/10 bg-surface-container-low text-center">
           <button
             onClick={() => setViewMode("documents")}
-            className="text-sm text-primary font-medium hover:underline flex items-center justify-center gap-1.5"
+            className="text-sm text-primary font-medium hover:underline flex items-center justify-center gap-1.5 font-body"
           >
             {isGenerating ? (
               <>
@@ -264,14 +252,12 @@ export default function SessionPage({
         </div>
       )}
 
-      {/* Social sharing for completed sessions */}
       {isCompleted && hasDocuments && viewMode === "documents" && (
-        <div className="px-4 py-4 border-t border-border bg-bg-surface/50">
+        <div className="px-6 py-4 border-t border-outline-variant/10 bg-surface-container-low">
           <SocialShare ideaTitle={session.ideaTitle} />
         </div>
       )}
 
-      {/* Upgrade Modal */}
       <UpgradeModal
         isOpen={showUpgradeModal}
         onClose={() => setShowUpgradeModal(false)}
