@@ -21,175 +21,177 @@ const DOC_TYPE_ORDER = [
   "elevator_pitch",
 ] as const;
 
-async function downloadAsPDF(title: string, content: string) {
-  const { jsPDF } = await import("jspdf");
-  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
 
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 20;
-  const maxWidth = pageWidth - 2 * margin;
-  let y = margin;
+function inlineToHtml(text: string): string {
+  return escapeHtml(text)
+    .replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>")
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/(?<!\*)\*([^*]+?)\*(?!\*)/g, "<em>$1</em>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>");
+}
 
-  const newPage = () => { doc.addPage(); y = margin; };
-  const ensureSpace = (h: number) => { if (y + h > pageHeight - margin) newPage(); };
-
-  // Title header
-  doc.setFontSize(22);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(40, 40, 40);
-  const titleLines = doc.splitTextToSize(title, maxWidth);
-  doc.text(titleLines, margin, y);
-  y += titleLines.length * 10 + 2;
-
-  doc.setDrawColor(180, 160, 100);
-  doc.setLineWidth(0.5);
-  doc.line(margin, y, pageWidth - margin, y);
-  y += 8;
-
+function markdownToHTML(content: string): string {
   const lines = content.split("\n");
+  let html = "";
+  let i = 0;
 
-  for (const line of lines) {
-    if (line.trim() === "") { y += 2; continue; }
+  while (i < lines.length) {
+    const line = lines[i];
 
-    if (/^---+$/.test(line.trim())) {
-      ensureSpace(6);
-      doc.setDrawColor(200, 200, 200);
-      doc.setLineWidth(0.3);
-      doc.line(margin, y, pageWidth - margin, y);
-      y += 5;
-      continue;
-    }
+    if (line.trim() === "") { i++; continue; }
+
+    if (/^---+$/.test(line.trim())) { html += "<hr>"; i++; continue; }
 
     const h1 = line.match(/^# (.+)/);
-    if (h1) {
-      ensureSpace(12);
-      doc.setFontSize(16);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(40, 40, 40);
-      const w = doc.splitTextToSize(h1[1], maxWidth);
-      doc.text(w, margin, y);
-      y += w.length * 8 + 3;
-      continue;
-    }
+    if (h1) { html += `<h1>${inlineToHtml(h1[1])}</h1>`; i++; continue; }
 
     const h2 = line.match(/^## (.+)/);
-    if (h2) {
-      ensureSpace(10);
-      doc.setFontSize(13);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(60, 60, 60);
-      const w = doc.splitTextToSize(h2[1], maxWidth);
-      doc.text(w, margin, y);
-      y += w.length * 7 + 2;
-      continue;
-    }
+    if (h2) { html += `<h2>${inlineToHtml(h2[1])}</h2>`; i++; continue; }
 
     const h3 = line.match(/^### (.+)/);
-    if (h3) {
-      ensureSpace(8);
-      doc.setFontSize(11);
-      doc.setFont("helvetica", "bolditalic");
-      doc.setTextColor(80, 80, 80);
-      const w = doc.splitTextToSize(h3[1], maxWidth);
-      doc.text(w, margin, y);
-      y += w.length * 6 + 2;
-      continue;
-    }
+    if (h3) { html += `<h3>${inlineToHtml(h3[1])}</h3>`; i++; continue; }
 
     const h4 = line.match(/^#### (.+)/);
-    if (h4) {
-      ensureSpace(7);
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(90, 90, 90);
-      const w = doc.splitTextToSize(h4[1], maxWidth);
-      doc.text(w, margin, y);
-      y += w.length * 5.5 + 1;
+    if (h4) { html += `<h4>${inlineToHtml(h4[1])}</h4>`; i++; continue; }
+
+    // Table
+    if (line.includes("|") && /^\|?[-| :]+\|?$/.test(lines[i + 1]?.trim() ?? "")) {
+      const tableLines: string[] = [];
+      while (i < lines.length && lines[i].includes("|")) { tableLines.push(lines[i]); i++; }
+      const headers = tableLines[0].split("|").map(c => c.trim()).filter(Boolean);
+      const rows = tableLines.slice(2).map(r => r.split("|").map(c => c.trim()).filter(Boolean));
+      html += `<table><thead><tr>${headers.map(h => `<th>${inlineToHtml(h)}</th>`).join("")}</tr></thead>`;
+      html += `<tbody>${rows.map(r => `<tr>${r.map(c => `<td>${inlineToHtml(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
       continue;
     }
 
-    // Table row
-    if (line.includes("|")) {
-      const cells = line.split("|").map(c => c.trim()).filter(Boolean);
-      if (/^[-| :]+$/.test(line.trim())) { y += 1; continue; } // separator
-      ensureSpace(6);
-      doc.setFontSize(9);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(60, 60, 60);
-      const colWidth = maxWidth / Math.max(cells.length, 1);
-      cells.forEach((cell, i) => {
-        const plain = cell.replace(/\*\*(.+?)\*\*/g, "$1").replace(/\*(.+?)\*/g, "$1").replace(/`(.+?)`/g, "$1");
-        const w = doc.splitTextToSize(plain, colWidth - 2);
-        doc.text(w, margin + i * colWidth, y);
-      });
-      y += 5.5;
+    // Unordered list
+    if (/^[-*] /.test(line.trim())) {
+      html += "<ul>";
+      while (i < lines.length && /^[-*] /.test(lines[i]?.trim() ?? "")) {
+        html += `<li><span class="bullet">●</span><span>${inlineToHtml(lines[i].trim().slice(2))}</span></li>`;
+        i++;
+      }
+      html += "</ul>";
+      continue;
+    }
+
+    // Ordered list
+    if (/^\d+\. /.test(line.trim())) {
+      html += "<ol>";
+      let n = 1;
+      while (i < lines.length && /^\d+\. /.test(lines[i]?.trim() ?? "")) {
+        html += `<li><span class="num">${n}.</span><span>${inlineToHtml(lines[i].trim().replace(/^\d+\. /, ""))}</span></li>`;
+        i++; n++;
+      }
+      html += "</ol>";
       continue;
     }
 
     // Blockquote
     if (line.trim().startsWith("> ")) {
-      ensureSpace(6);
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "italic");
-      doc.setTextColor(100, 100, 100);
-      const text = line.trim().slice(2);
-      const w = doc.splitTextToSize(text, maxWidth - 8);
-      doc.text(w, margin + 4, y);
-      y += w.length * 5 + 2;
+      const qLines: string[] = [];
+      while (i < lines.length && lines[i]?.trim().startsWith("> ")) {
+        qLines.push(lines[i].trim().slice(2));
+        i++;
+      }
+      html += `<blockquote>${qLines.map(l => `<p>${inlineToHtml(l)}</p>`).join("")}</blockquote>`;
       continue;
     }
 
-    // Bullet list
-    if (/^[-*] /.test(line.trim())) {
-      ensureSpace(6);
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(50, 50, 50);
-      const plain = line.trim().slice(2).replace(/\*\*(.+?)\*\*/g, "$1").replace(/\*(.+?)\*/g, "$1").replace(/`(.+?)`/g, "$1");
-      const w = doc.splitTextToSize("• " + plain, maxWidth - 6);
-      doc.text(w, margin + 4, y);
-      y += w.length * 5 + 1;
+    // Code block
+    if (line.trim().startsWith("```")) {
+      const codeLines: string[] = [];
+      i++;
+      while (i < lines.length && !lines[i]?.trim().startsWith("```")) { codeLines.push(lines[i]); i++; }
+      i++;
+      html += `<pre><code>${escapeHtml(codeLines.join("\n"))}</code></pre>`;
       continue;
     }
 
-    // Numbered list
-    const numMatch = line.trim().match(/^(\d+)\. (.+)/);
-    if (numMatch) {
-      ensureSpace(6);
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(50, 50, 50);
-      const plain = numMatch[2].replace(/\*\*(.+?)\*\*/g, "$1").replace(/\*(.+?)\*/g, "$1").replace(/`(.+?)`/g, "$1");
-      const w = doc.splitTextToSize(`${numMatch[1]}. ${plain}`, maxWidth - 6);
-      doc.text(w, margin + 4, y);
-      y += w.length * 5 + 1;
+    // Italic standalone line (subtitle pattern)
+    if (line.trim().startsWith("*") && line.trim().endsWith("*") && !line.trim().startsWith("**")) {
+      html += `<p class="subtitle">${escapeHtml(line.trim().slice(1, -1))}</p>`;
+      i++;
       continue;
     }
 
     // Paragraph
-    ensureSpace(6);
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(50, 50, 50);
-    const plain = line.replace(/\*\*(.+?)\*\*/g, "$1").replace(/\*(.+?)\*/g, "$1").replace(/`(.+?)`/g, "$1");
-    const w = doc.splitTextToSize(plain, maxWidth);
-    doc.text(w, margin, y);
-    y += w.length * 5 + 2;
+    html += `<p>${inlineToHtml(line)}</p>`;
+    i++;
   }
 
-  // Footer on each page
-  const totalPages = doc.getNumberOfPages();
-  for (let p = 1; p <= totalPages; p++) {
-    doc.setPage(p);
-    doc.setFontSize(8);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(160, 160, 160);
-    doc.text("Generated by IdeaForge", margin, pageHeight - 8);
-    doc.text(`${p} / ${totalPages}`, pageWidth - margin, pageHeight - 8, { align: "right" });
-  }
+  return html;
+}
 
-  doc.save(`${title.replace(/\s+/g, "_")}.pdf`);
+function downloadAsPDF(title: string, content: string) {
+  const bodyHTML = markdownToHTML(content);
+
+  const fullHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>${escapeHtml(title)}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;1,6..72,300&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif; font-size: 10.5pt; line-height: 1.65; color: #1a1a1a; background: #fff; padding: 20mm 20mm; }
+    .content { max-width: 170mm; margin: 0 auto; }
+    .doc-header { margin-bottom: 18pt; padding-bottom: 10pt; border-bottom: 1.5pt solid #c9a84c; }
+    .doc-title { font-family: 'Newsreader', Georgia, 'Times New Roman', serif; font-size: 20pt; font-weight: 300; color: #111; line-height: 1.25; }
+    .doc-footer { margin-top: 18pt; padding-top: 8pt; border-top: 0.5pt solid #ddd; font-size: 7.5pt; color: #aaa; text-align: center; }
+    h1 { font-family: 'Newsreader', Georgia, serif; font-size: 16pt; font-weight: 400; color: #b8922a; margin: 16pt 0 6pt; line-height: 1.3; }
+    h2 { font-family: 'Newsreader', Georgia, serif; font-size: 13pt; font-weight: 400; color: #111; margin: 13pt 0 5pt; line-height: 1.3; }
+    h3 { font-family: 'Newsreader', Georgia, serif; font-size: 11.5pt; font-weight: 300; font-style: italic; color: #333; margin: 10pt 0 4pt; }
+    h4 { font-family: 'Instrument Sans', sans-serif; font-size: 10pt; font-weight: 600; color: #444; margin: 8pt 0 3pt; text-transform: uppercase; letter-spacing: 0.03em; }
+    p { margin: 5pt 0; }
+    p.subtitle { font-style: italic; color: #555; font-family: 'Newsreader', Georgia, serif; }
+    ul, ol { margin: 6pt 0; }
+    li { display: flex; gap: 6pt; align-items: flex-start; margin: 3pt 0; }
+    .bullet { color: #c9a84c; font-size: 7pt; margin-top: 4pt; flex-shrink: 0; }
+    .num { color: #c9a84c; font-weight: 600; font-size: 9pt; min-width: 14pt; flex-shrink: 0; margin-top: 1pt; }
+    strong { font-weight: 600; color: #111; }
+    em { font-style: italic; color: #444; }
+    code { font-family: 'Courier New', Courier, monospace; font-size: 9pt; background: #f2f2f0; padding: 1pt 4pt; border-radius: 2pt; }
+    pre { background: #f5f5f3; border: 0.5pt solid #e0e0dc; border-radius: 3pt; padding: 10pt; margin: 8pt 0; overflow: hidden; }
+    pre code { background: none; padding: 0; font-size: 8.5pt; }
+    table { width: 100%; border-collapse: collapse; margin: 8pt 0; font-size: 9pt; }
+    th { text-align: left; font-weight: 600; color: #444; padding: 5pt 8pt; background: #f5f5f3; border-bottom: 1pt solid #ccc; font-size: 8.5pt; }
+    td { padding: 4.5pt 8pt; border-bottom: 0.5pt solid #ebebeb; vertical-align: top; color: #1a1a1a; }
+    tr:last-child td { border-bottom: none; }
+    blockquote { margin: 8pt 0; padding: 4pt 0 4pt 12pt; border-left: 2pt solid #c9a84c; color: #555; font-style: italic; }
+    blockquote p { margin: 2pt 0; }
+    hr { border: none; border-top: 0.5pt solid #e0e0dc; margin: 12pt 0; }
+    @page { size: A4 portrait; margin: 15mm; }
+    @media print { body { padding: 0; } }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="doc-header"><h1 class="doc-title">${escapeHtml(title)}</h1></div>
+    ${bodyHTML}
+    <div class="doc-footer">Generated by IdeaForge</div>
+  </div>
+</body>
+</html>`;
+
+  const pw = window.open("", "_blank", "width=900,height=700");
+  if (!pw) {
+    alert("Please allow popups to download the PDF");
+    return;
+  }
+  pw.document.write(fullHTML);
+  pw.document.close();
+  pw.focus();
+  setTimeout(() => pw.print(), 800);
 }
 
 function CopyButton({ content }: { content: string }) {
