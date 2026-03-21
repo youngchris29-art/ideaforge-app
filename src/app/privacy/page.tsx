@@ -50,7 +50,7 @@ export default function PrivacyPage() {
 
           <section className="space-y-3">
             <h2 className="text-lg font-display font-semibold text-on-surface">Data Retention & Deletion</h2>
-            <p>Your data is retained as long as your account is active. You can archive individual sessions from the dashboard at any time. For full account and data deletion, contact us at <a href="mailto:support@ideaforge.app" className="text-primary hover:text-primary-light">support@ideaforge.app</a> and we will delete all your data within 48 hours.</p>
+            <p>Your data is retained as long as your account is active. You can archive individual sessions from the dashboard at any time. For full account and data deletion, contact us at <a href="mailto:support@ideaforgeapp.net" className="text-primary hover:text-primary-light">support@ideaforgeapp.net</a> and we will delete all your data within 48 hours.</p>
           </section>
 
           <section className="space-y-3">
@@ -60,7 +60,7 @@ export default function PrivacyPage() {
 
           <section className="space-y-3">
             <h2 className="text-lg font-display font-semibold text-on-surface">Contact</h2>
-            <p>If you have questions about this privacy policy or your data, contact us at <a href="mailto:support@ideaforge.app" className="text-primary hover:text-primary-light">support@ideaforge.app</a>.</p>
+            <p>If you have questions about this privacy policy or your data, contact us at <a href="mailto:support@ideaforgeapp.net" className="text-primary hover:text-primary-light">support@ideaforgeapp.net</a>.</p>
           </section>
         </div>
 

@@ -70,7 +70,7 @@ export default function HelpPage() {
           />
           <FaqItem
             question="Can I delete my data?"
-            answer="Yes. You can archive individual sessions from the dashboard. For full account deletion, contact us at support@ideaforge.app and we'll delete everything within 48 hours."
+            answer="Yes. You can archive individual sessions from the dashboard. For full account deletion, contact us at support@ideaforgeapp.net and we'll delete everything within 48 hours."
           />
         </div>
 
@@ -91,7 +91,7 @@ export default function HelpPage() {
           <h2 className="font-display font-semibold text-lg">Still have questions?</h2>
           <p className="text-on-surface-variant text-sm">We&apos;re building IdeaForge for founders like you. Reach out anytime.</p>
           <a
-            href="mailto:support@ideaforge.app"
+            href="mailto:support@ideaforgeapp.net"
             className="inline-block px-6 py-2.5 bg-primary text-surface font-medium rounded-md hover:bg-primary-hover transition-colors text-sm"
           >
             Contact Support

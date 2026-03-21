@@ -155,7 +155,7 @@ export default function AccountPage() {
             Need help? Have feedback? Reach out — we&apos;re building IdeaForge for founders like you.
           </p>
           <a
-            href="mailto:support@ideaforge.app"
+            href="mailto:support@ideaforgeapp.net"
             className="inline-block px-5 py-2.5 border border-hairline text-on-surface font-medium rounded-md hover:bg-surface-bright transition-colors text-sm"
           >
             Contact Support

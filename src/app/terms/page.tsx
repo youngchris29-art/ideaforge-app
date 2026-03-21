@@ -63,7 +63,7 @@ export default function TermsPage() {
 
           <section className="space-y-3">
             <h2 className="text-lg font-display font-semibold text-on-surface">Contact</h2>
-            <p>Questions about these terms? Contact us at <a href="mailto:support@ideaforge.app" className="text-primary hover:text-primary-light">support@ideaforge.app</a>.</p>
+            <p>Questions about these terms? Contact us at <a href="mailto:support@ideaforgeapp.net" className="text-primary hover:text-primary-light">support@ideaforgeapp.net</a>.</p>
           </section>
         </div>
 
