@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton, useUser } from "@clerk/nextjs";
+import Image from "next/image";
 
 export default function Header() {
   const { user, isLoaded } = useUser();
@@ -32,10 +33,10 @@ export default function Header() {
         {/* Logo */}
         <Link
           href={user ? "/dashboard" : "/"}
-          className="text-2xl font-display font-normal italic text-primary hover:text-primary-light transition-colors"
+          className="flex items-center hover:opacity-80 transition-opacity"
           aria-label="IdeaForge home"
         >
-          IdeaForge
+          <Image src="/logo-with-text.svg" alt="IdeaForge Logo" width={160} height={36} priority />
         </Link>
 
         {/* Desktop Navigation */}

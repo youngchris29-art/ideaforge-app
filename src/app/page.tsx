@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Image from "next/image";
 import HeroSection from "@/components/HeroSection";
 import {
   SocialProofSection,
@@ -40,7 +41,9 @@ export default function LandingPage() {
       {/* Nav */}
       <nav className="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-xl shadow-[0px_12px_32px_rgba(0,0,0,0.4)]">
         <div className="flex justify-between items-center max-w-7xl mx-auto px-8 py-4">
-          <Link href="/" className="text-2xl font-display italic text-primary tracking-tight">IdeaForge</Link>
+          <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <Image src="/logo-with-text.svg" alt="IdeaForge Logo" width={160} height={36} priority />
+          </Link>
           <div className="hidden md:flex items-center gap-8 font-display font-light text-lg">
             <Link href="/pricing" className="text-on-surface hover:text-primary transition-colors">Pricing</Link>
             <Link href="/help" className="text-on-surface hover:text-primary transition-colors">FAQ</Link>
